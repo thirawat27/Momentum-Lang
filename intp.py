@@ -1,5 +1,4 @@
-# --- Momentum Interpreter in Python (Version 1.0.0 - Full Unabridged Code) ---
-
+# --- Momentum Interpreter in Python (Version 1.0.1) ---
 
 import sys
 import time
@@ -37,6 +36,10 @@ class Lexer:
             'NEXT': Token('NEXT', 'NEXT'),
             'FUNCTION': Token('FUNCTION', 'FUNCTION'),
             'RETURN': Token('RETURN', 'RETURN'),
+            'DIM': Token('DIM', 'DIM'),
+            'DATA': Token('DATA', 'DATA'),
+            'READ': Token('READ', 'READ'),
+            'RESTORE': Token('RESTORE', 'RESTORE'),
         }
 
     def advance(self):
@@ -166,12 +169,14 @@ class Lexer:
                 break
         return tokens
 
-# --- 3. Parser ---
+# --- 3. Parser & AST ---
 # Builds an Abstract Syntax Tree (AST) from the token stream.
 
 class AST: pass
 class BinOp(AST):
     def __init__(self, left, op, right): self.left, self.op, self.right = left, op, right
+class UnaryOp(AST):
+    def __init__(self, op, expr): self.op, self.expr = op, expr
 class Num(AST):
     def __init__(self, token): self.token, self.value = token, token.value
 class String(AST):
@@ -199,8 +204,18 @@ class Return(AST):
 class Program(AST):
     def __init__(self, statements): self.statements = statements
 class NoOp(AST):
-    """Represents an empty operation, for blank lines or comments."""
     pass
+class Dim(AST):
+    def __init__(self, var, size): self.var, self.size = var, size
+class ArrayAccess(AST):
+    def __init__(self, name_token, index_expr): self.name_token, self.index_expr = name_token, index_expr
+class Data(AST):
+    def __init__(self, values): self.values = values
+class Read(AST):
+    def __init__(self, variables): self.variables = variables
+class Restore(AST):
+    pass
+
 
 class Parser:
     def __init__(self, tokens):
@@ -218,7 +233,7 @@ class Parser:
             raise Exception(f"Parser error: Expected {token_type}, but found {self.current_token.type} at position {self.pos}")
 
     def factor(self):
-        """Parse numbers, strings, variables, function calls, and expressions in parentheses."""
+        """Parse numbers, strings, variables, function/array calls, and expressions in parentheses."""
         token = self.current_token
         if token.type in ('INTEGER', 'FLOAT'):
             self.eat(token.type)
@@ -232,21 +247,25 @@ class Parser:
             self.eat('RPAREN')
             return node
         if token.type == 'ID':
-            # Lookahead to distinguish between a variable and a function call
-            if self.pos + 1 < len(self.tokens) and self.tokens[self.pos + 1].type == 'LPAREN':
-                return self.func_call()
-            else:
-                self.eat('ID')
-                return Var(token)
+            return self.variable() # Use the new general variable parser
+
         raise Exception(f"Parser error: Invalid factor '{token}'")
+
+    def unary(self):
+        """Parse unary plus and minus operators."""
+        token = self.current_token
+        if token.type in ('PLUS', 'MINUS'):
+            self.eat(token.type)
+            return UnaryOp(op=token, expr=self.unary())
+        return self.factor()
 
     def term(self):
         """Parse multiplication and division."""
-        node = self.factor()
+        node = self.unary()
         while self.current_token.type in ('MUL', 'DIV'):
             token = self.current_token
             self.eat(token.type)
-            node = BinOp(left=node, op=token, right=self.factor())
+            node = BinOp(left=node, op=token, right=self.unary())
         return node
         
     def expr(self):
@@ -258,12 +277,33 @@ class Parser:
             node = BinOp(left=node, op=token, right=self.term())
         return node
 
+    def variable(self):
+        """Parses a simple variable (x) or an array/function access (x(i))."""
+        name_token = self.current_token
+        self.eat('ID')
+        
+        if self.current_token.type == 'LPAREN':
+            self.eat('LPAREN')
+            args = []
+            if self.current_token.type != 'RPAREN':
+                args.append(self.expr())
+                while self.current_token.type == 'COMMA':
+                    self.eat('COMMA')
+                    args.append(self.expr())
+            self.eat('RPAREN')
+            
+            # The interpreter will decide if it's an ArrayAccess or FuncCall at runtime
+            if len(args) == 1:
+                return ArrayAccess(name_token, args[0])
+            return FuncCall(name_token.value, args)
+        else:
+            return Var(name_token)
+
     def statement_list(self, end_tokens):
         """Parse a list of statements until an end token is found."""
         statements = []
         while self.current_token.type not in end_tokens and self.current_token.type != 'EOF':
             statements.append(self.statement())
-        
         if not statements:
             return [NoOp()]
         return statements
@@ -279,15 +319,19 @@ class Parser:
         if token_type == 'FOR': return self.for_statement()
         if token_type == 'FUNCTION': return self.func_definition()
         if token_type == 'RETURN': return self.return_statement()
+        if token_type == 'DIM': return self.dim_statement()
+        if token_type == 'DATA': return self.data_statement()
+        if token_type == 'READ': return self.read_statement()
+        if token_type == 'RESTORE': return self.restore_statement()
         
-        # If the token is not a valid start of a statement, skip it to prevent infinite loop
         self.eat(self.current_token.type)
         return NoOp()
         
     def assignment_statement(self):
         self.eat('LET')
-        left = Var(self.current_token)
-        self.eat('ID')
+        left = self.variable()
+        if not isinstance(left, (Var, ArrayAccess)):
+            raise Exception("Parser error: Invalid target for assignment.")
         op = self.current_token
         self.eat('ASSIGN')
         right = self.expr()
@@ -299,8 +343,7 @@ class Parser:
 
     def input_statement(self):
         self.eat('INPUT')
-        var = Var(self.current_token)
-        self.eat('ID')
+        var = self.variable() # Can now be an array element
         prompt = None
         if self.current_token.type == 'COMMA':
             self.eat('COMMA')
@@ -328,13 +371,14 @@ class Parser:
 
     def for_statement(self):
         self.eat('FOR')
-        var = Var(self.current_token)
-        self.eat('ID')
+        var = self.variable() # FOR loop variable must be a simple var
+        if not isinstance(var, Var):
+             raise Exception("Parser error: FOR loop counter must be a simple variable.")
         self.eat('ASSIGN')
         start_expr = self.expr()
         self.eat('TO')
         end_expr = self.expr()
-        step_expr = Num(Token('INTEGER', 1)) # Default step is 1
+        step_expr = Num(Token('INTEGER', 1))
         if self.current_token.type == 'STEP':
             self.eat('STEP')
             step_expr = self.expr()
@@ -362,24 +406,44 @@ class Parser:
         block = self.statement_list(['ENDFUNCTION'])
         self.eat('ENDFUNCTION')
         return FuncDef(func_name, params, block)
-        
-    def func_call(self):
-        func_name = self.current_token.value
-        self.eat('ID')
-        self.eat('LPAREN')
-        args = []
-        if self.current_token.type != 'RPAREN':
-            args.append(self.expr())
-            while self.current_token.type == 'COMMA':
-                self.eat('COMMA')
-                args.append(self.expr())
-        self.eat('RPAREN')
-        return FuncCall(func_name, args)
 
     def return_statement(self):
         self.eat('RETURN')
         return Return(self.expr())
 
+    def dim_statement(self):
+        self.eat('DIM')
+        var_token = self.current_token
+        self.eat('ID')
+        self.eat('LPAREN')
+        size_expr = self.expr()
+        self.eat('RPAREN')
+        return Dim(Var(var_token), size_expr)
+
+    def data_statement(self):
+        self.eat('DATA')
+        values = []
+        # Loop until the end of the line or a non-data token
+        while self.current_token.type not in ('EOF', 'LET', 'PRINT', 'IF', 'FOR', 'WHILE', 'FUNCTION', 'DIM', 'READ', 'RESTORE', 'NEXT', 'WEND', 'ENDIF', 'ENDFUNCTION'):
+            values.append(self.expr())
+            if self.current_token.type == 'COMMA':
+                self.eat('COMMA')
+            else:
+                break
+        return Data(values)
+        
+    def read_statement(self):
+        self.eat('READ')
+        variables = [self.variable()] # Can now parse array elements
+        while self.current_token.type == 'COMMA':
+            self.eat('COMMA')
+            variables.append(self.variable()) # Can now parse array elements
+        return Read(variables)
+
+    def restore_statement(self):
+        self.eat('RESTORE')
+        return Restore()
+        
     def parse(self):
         """Parse the entire program and return the AST."""
         statements = self.statement_list(['EOF'])
@@ -389,6 +453,14 @@ class Parser:
 
 # --- 4. Interpreter ---
 # Executes the program by walking the AST.
+
+class ReturnSignal(Exception):
+    """
+    Custom exception used to signal a return from a function.
+    This allows breaking out of nested control structures.
+    """
+    def __init__(self, value):
+        self.value = value
 
 class CallStack:
     """Manages the stack of activation records for function calls."""
@@ -409,9 +481,10 @@ class Interpreter:
     def __init__(self, tree):
         self.tree = tree
         self.call_stack = CallStack()
-        # Create and push the global scope's activation record
         global_ar = ActivationRecord(name='global', type='program', nesting_level=1)
         self.call_stack.push(global_ar)
+        self.data_store = []
+        self.data_pointer = 0
 
     def visit(self, node):
         """Dynamically dispatch to the correct visit method based on the node's type."""
@@ -423,13 +496,16 @@ class Interpreter:
         raise Exception(f'Interpreter error: No visit_{type(node).__name__} method')
 
     def visit_Program(self, node):
-        # First pass: find all function definitions and store them globally
+        # First pass: find all function and data definitions and store them globally
         for statement in node.statements:
             if isinstance(statement, FuncDef):
                 self.visit(statement)
+            elif isinstance(statement, Data):
+                self.visit(statement)
+
         # Second pass: execute all other statements
         for statement in node.statements:
-            if not isinstance(statement, FuncDef):
+            if not isinstance(statement, (FuncDef, Data)):
                 self.visit(statement)
 
     def visit_NoOp(self, node):
@@ -438,6 +514,14 @@ class Interpreter:
 
     def visit_Num(self, node): return node.value
     def visit_String(self, node): return node.value
+
+    def visit_UnaryOp(self, node):
+        value = self.visit(node.expr)
+        if node.op.type == 'MINUS':
+            return -value
+        elif node.op.type == 'PLUS':
+            return +value
+        return value
 
     def visit_BinOp(self, node):
         left = self.visit(node.left)
@@ -457,9 +541,25 @@ class Interpreter:
         if op_type == 'GTE': return left >= right
 
     def visit_Assign(self, node):
-        var_name = node.left.value.lower()
         ar = self.call_stack.peek()
-        ar.members[var_name] = self.visit(node.right)
+        value = self.visit(node.right)
+
+        if isinstance(node.left, Var):
+            var_name = node.left.value.lower()
+            ar.members[var_name] = value
+        elif isinstance(node.left, ArrayAccess):
+            array_name = node.left.name_token.value.lower()
+            array = ar.members.get(array_name)
+            if not isinstance(array, list):
+                raise TypeError(f"'{array_name}' is not an array.")
+            
+            index = self.visit(node.left.index_expr)
+            if not isinstance(index, int) or not (0 <= index < len(array)):
+                 raise IndexError(f"Array index out of bounds for '{array_name}'.")
+            
+            array[index] = value
+        else:
+            raise Exception("Interpreter error: Invalid assignment target.")
 
     def visit_Var(self, node):
         var_name = node.value.lower()
@@ -474,21 +574,32 @@ class Interpreter:
 
     def visit_Print(self, node):
         value = self.visit(node.expr)
-        # To handle Momentum's implicit type conversion for print
         print(str(value))
     
     def visit_Input(self, node):
-        var_name = node.var.value.lower()
+        ar = self.call_stack.peek()
         prompt = str(self.visit(node.prompt)) if node.prompt else ""
         user_input = input(prompt)
-        # Try to convert to a number if possible, otherwise keep as string
+        
         try:
             val = float(user_input)
-            if val.is_integer():
-                val = int(val)
-            self.call_stack.peek().members[var_name] = val
+            if val.is_integer(): val = int(val)
         except ValueError:
-            self.call_stack.peek().members[var_name] = user_input
+            val = user_input
+        
+        # Handle assignment to simple var or array element
+        if isinstance(node.var, Var):
+            var_name = node.var.value.lower()
+            ar.members[var_name] = val
+        elif isinstance(node.var, ArrayAccess):
+            array_name = node.var.name_token.value.lower()
+            array = ar.members.get(array_name)
+            if not isinstance(array, list):
+                raise TypeError(f"'{array_name}' is not an array.")
+            index = self.visit(node.var.index_expr)
+            if not isinstance(index, int) or not (0 <= index < len(array)):
+                raise IndexError(f"Array index out of bounds for '{array_name}'.")
+            array[index] = val
     
     def visit_If(self, node):
         if self.visit(node.condition):
@@ -523,49 +634,108 @@ class Interpreter:
 
     def visit_FuncCall(self, node):
         func_name = node.name.lower()
-        # Find the function in the global scope
         func_def = self.call_stack.records[0].members.get(func_name)
-        if not isinstance(func_def, FuncDef):
-            # Check for built-in functions
-            if func_name in BUILTIN_FUNCTIONS:
-                args = [self.visit(arg) for arg in node.args]
-                return BUILTIN_FUNCTIONS[func_name](*args)
-            raise Exception(f"'{node.name}' is not a function.")
+        
+        if isinstance(func_def, FuncDef):
+            ar = ActivationRecord(name=func_name, type='function', nesting_level=self.call_stack.peek().nesting_level + 1)
+            
+            if len(node.args) != len(func_def.params):
+                raise Exception(f"Function '{node.name}' expected {len(func_def.params)} arguments, but got {len(node.args)}")
+            
+            for param_node, arg_node in zip(func_def.params, node.args):
+                ar.members[param_node.value.lower()] = self.visit(arg_node)
 
-        # Create a new Activation Record for this function call
-        ar = ActivationRecord(
-            name=func_name,
-            type='function',
-            nesting_level=self.call_stack.peek().nesting_level + 1
-        )
-        
-        # Pass arguments to the function
-        if len(node.args) != len(func_def.params):
-            raise Exception(f"Function '{node.name}' expected {len(func_def.params)} arguments, but got {len(node.args)}")
-        
-        for param_node, arg_node in zip(func_def.params, node.args):
-            param_name = param_node.value.lower()
-            arg_value = self.visit(arg_node)
-            ar.members[param_name] = arg_value
+            self.call_stack.push(ar)
+            
+            return_value = None # Default return value if no return statement is hit
+            try:
+                # Execute the function block
+                for statement in func_def.block:
+                    self.visit(statement)
+            except ReturnSignal as rs:
+                # Catch the return signal and get the value
+                return_value = rs.value
+            finally:
+                # Always pop the activation record
+                self.call_stack.pop()
+            
+            return return_value
 
-        self.call_stack.push(ar)
+        if func_name in BUILTIN_FUNCTIONS:
+            args = [self.visit(arg) for arg in node.args]
+            return BUILTIN_FUNCTIONS[func_name](*args)
         
-        return_value = None
-        try:
-            # Execute the function block
-            for statement in func_def.block:
-                if isinstance(statement, Return):
-                    return_value = self.visit(statement)
-                    break # Exit the function block on return
-                self.visit(statement)
-        finally:
-            # Clean up by popping the activation record
-            self.call_stack.pop()
-        
-        return return_value
+        raise Exception(f"'{node.name}' is not a function.")
 
     def visit_Return(self, node):
-        return self.visit(node.expr)
+        """Instead of returning a value, raise an exception to unwind the stack."""
+        value = self.visit(node.expr)
+        raise ReturnSignal(value)
+
+    def visit_Dim(self, node):
+        ar = self.call_stack.peek()
+        var_name = node.var.value.lower()
+        if var_name in ar.members:
+            raise Exception(f"Cannot redimension array '{var_name}'.")
+
+        size = self.visit(node.size)
+        if not isinstance(size, int) or size <= 0:
+            raise ValueError("Array size must be a positive integer.")
+        
+        ar.members[var_name] = [None] * size
+
+    def visit_ArrayAccess(self, node):
+        ar = self.call_stack.peek()
+        name_val = node.name_token.value.lower()
+        
+        # Check current scope first
+        target = ar.members.get(name_val)
+        if target is None: # Then check global scope
+             target = self.call_stack.records[0].members.get(name_val)
+
+        # If it's an array (list in Python), access it
+        if isinstance(target, list):
+            index = self.visit(node.index_expr)
+            if not isinstance(index, int) or not (0 <= index < len(target)):
+                 raise IndexError(f"Array index {index} out of bounds for '{name_val}' with size {len(target)}.")
+            value = target[index]
+            return 0 if value is None else value
+        
+        # If it's not an array, it must be a function call with one argument
+        func_call_node = FuncCall(node.name_token.value, [node.index_expr])
+        return self.visit(func_call_node)
+
+    def visit_Data(self, node):
+        # This is a pre-processing step.
+        for value_node in node.values:
+            self.data_store.append(self.visit(value_node))
+
+    def visit_Read(self, node):
+        ar = self.call_stack.peek()
+        for var_node in node.variables:
+            if self.data_pointer >= len(self.data_store):
+                raise Exception("Out of DATA to read.")
+            
+            value = self.data_store[self.data_pointer]
+            
+            # Handle assignment to simple var or array element
+            if isinstance(var_node, Var):
+                var_name = var_node.value.lower()
+                ar.members[var_name] = value
+            elif isinstance(var_node, ArrayAccess):
+                array_name = var_node.name_token.value.lower()
+                array = ar.members.get(array_name)
+                if not isinstance(array, list):
+                    raise TypeError(f"'{array_name}' is not an array.")
+                index = self.visit(var_node.index_expr)
+                if not isinstance(index, int) or not (0 <= index < len(array)):
+                    raise IndexError(f"Array index out of bounds for '{array_name}'.")
+                array[index] = value
+
+            self.data_pointer += 1
+            
+    def visit_Restore(self, node):
+        self.data_pointer = 0
 
     def interpret(self):
         """Start the interpretation process."""
@@ -617,27 +787,24 @@ if __name__ == "__main__":
     else:
         # Default example code if no file is provided
         print("No input file. Running default demo program.\n"
-              "Usage: python <your_script_name>.py my_program.mn")
+              "Usage: python intp.py my_program.mn")
         source_code = """
-        // Momentum Version 1.0.0 Demo
-        // Now with built-in functions!
-
-        let start_time = time()
-
-        function fibonacci(n)
-            if n <= 1 then
-                return n
+        // Momentum Version 1.0.1 Demo
+        // Now correctly handles nested RETURN statements.
+        
+        function get_sign(num)
+            if num > 0 then
+                return "Positive"
+            else if num < 0 then
+                return "Negative"
             else
-                return fibonacci(n - 1) + fibonacci(n - 2)
+                return "Zero"
             end if
         end function
 
-        print("Calculating Fibonacci(10)...")
-        let result = fibonacci(10)
-        print("Fibonacci of 10 is: " + str(result))
-        
-        let end_time = time()
-        print("Calculation took: " + str(end_time - start_time) + " seconds.")
+        print("The sign of 10 is: " + get_sign(10))
+        print("The sign of -5 is: " + get_sign(-5))
+        print("The sign of 0 is: " + get_sign(0))
         """
 
     print("--- Running Momentum Code ---")

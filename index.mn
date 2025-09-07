@@ -1,8 +1,120 @@
-// file: index.mn
+// --- Comprehensive Test Suite for Momentum v1.0.1 ---
+// This file tests all major features including Arrays and DATA/READ.
+// It is written in a lowercase style to test case-insensitivity.
 
-print("This is my first Momentum program!")
+// ======================================================
+// Section 1: Array (DIM) Functionality Test
+// ======================================================
+print("--- Section 1: Array (DIM) Basic Tests ---")
 
-for i = 1 to 5
-  // แก้ไขบรรทัดนี้: ใช้ str() เพื่อแปลง i เป็นสตริง
-  print("Loop number " + str(i))
+dim names(3) // Array of 3 elements: names(0), names(1), names(2)
+let names(0) = "Apple"
+let names(1) = "Banana"
+let names(2) = "Cherry"
+
+print("Testing array assignment and retrieval:")
+print("Value at index 0: " + names(0))
+print("Value at index 1: " + names(1))
+print("Value at index 2: " + names(2))
+
+print("")
+print("Testing array in a FOR loop:")
+let message = "Fruits: "
+for i = 0 to 2
+    let message = message + names(i)
+    if i < 2 then
+        let message = message + ", "
+    end if
 next i
+print(message)
+
+print("")
+print("Testing array with numeric values and calculations:")
+dim numbers(5)
+for i = 0 to 4
+    let numbers(i) = (i + 1) * 10 // Assign 10, 20, 30, 40, 50
+next i
+
+let sum = numbers(0) + numbers(1) + numbers(2) + numbers(3) + numbers(4)
+print("Sum of numbers in array: " + str(sum))
+
+print("Value at index 3 is " + str(numbers(3)))
+
+// ======================================================
+// Section 2: DATA, READ, RESTORE Functionality Test
+// ======================================================
+print("")
+print("--- Section 2: DATA/READ/RESTORE Tests ---")
+
+// Define multiple DATA statements and negative numbers.
+data "CPU", 3.5, "Intel"
+data "GPU", 2.8, "Nvidia"
+data "RAM", 32, "Corsair", -99
+
+print("First read-through of DATA:")
+// CORRECT: We do not need a 'let' statement before 'read'.
+// 'read' will create the variables automatically.
+for i = 1 to 3
+    read component, speed, brand
+    print("Component: " + component + ", Speed: " + str(speed) + "GHz, Brand: " + brand)
+next i
+
+print("")
+print("Testing RESTORE and reading again:")
+restore
+read component, speed, brand
+print("After RESTORE, first component is: " + component)
+
+// Reading just one more item continues from where it left off
+read component, speed, brand
+print("The next component is: " + component)
+
+// ======================================================
+// Section 3: Integration, Functions, and Edge Cases
+// ======================================================
+print("")
+print("--- Section 3: Integration and Edge Cases ---")
+
+print("Using READ to populate an array:")
+restore
+dim parts(3)
+dim brands(3)
+
+for i = 0 to 2
+    read parts(i), speed, brands(i)
+next i
+print("The brand of a " + parts(2) + " is " + brands(2))
+
+print("")
+print("Test function with nested return statements:")
+
+function abs_val(n)
+    if n < 0 then
+        return -n // Test unary minus and nested return
+    else
+        return n
+    end if
+end function
+
+print("Absolute value of -123 is: " + str(abs_val(-123)))
+
+
+// ======================================================
+// Section 4: Expected Error Tests (Uncomment to test)
+// ======================================================
+print("")
+print("--- Section 4: Expected Error Tests ---")
+print("The following tests are commented out. Uncomment them one by one to see error handling.")
+
+// --- Array Errors ---
+// print("Testing array index out of bounds...")
+// dim test_array(2)
+// print(test_array(2)) // Should cause "Array index out of bounds" error
+
+// --- DATA/READ Errors ---
+// print("Testing out of data error...")
+// restore
+// read a,b,c,d,e,f,g,h,i,j,k // Should cause "Out of DATA to read" error
+
+print("")
+print("--- Test Suite Finished ---")
