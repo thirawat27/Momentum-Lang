@@ -1,0 +1,8 @@
+// file: index.mn
+
+print("This is my first Momentum program!")
+
+for i = 1 to 5
+  // แก้ไขบรรทัดนี้: ใช้ str() เพื่อแปลง i เป็นสตริง
+  print("Loop number " + str(i))
+next i
