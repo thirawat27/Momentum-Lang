@@ -1,120 +1,188 @@
-// --- Comprehensive Test Suite for Momentum v1.0.1 ---
-// This file tests all major features including Arrays and DATA/READ.
-// It is written in a lowercase style to test case-insensitivity.
+// This file tests all features of the Momentum language.
 
-// ======================================================
-// Section 1: Array (DIM) Functionality Test
-// ======================================================
-print("--- Section 1: Array (DIM) Basic Tests ---")
-
-dim names(3) // Array of 3 elements: names(0), names(1), names(2)
-let names(0) = "Apple"
-let names(1) = "Banana"
-let names(2) = "Cherry"
-
-print("Testing array assignment and retrieval:")
-print("Value at index 0: " + names(0))
-print("Value at index 1: " + names(1))
-print("Value at index 2: " + names(2))
-
+print("--- Momentum Language Feature Test ---")
 print("")
-print("Testing array in a FOR loop:")
-let message = "Fruits: "
-for i = 0 to 2
-    let message = message + names(i)
-    if i < 2 then
-        let message = message + ", "
-    end if
-next i
-print(message)
 
+// 1. Comments, Variables, Data Types, and Print
+print("--- 1. Testing Variables, Types, and Print ---")
+let my_integer = 100
+let my_float = 123.45
+let my_string = "Hello, Momentum!"
+let is_true = 1 // Use 1 for true
+
+print("Integer: " + str(my_integer))
+print("Float: " + str(my_float))
+print("String: " + my_string)
+print("Type of my_float is: " + type(my_float))
 print("")
-print("Testing array with numeric values and calculations:")
-dim numbers(5)
-for i = 0 to 4
-    let numbers(i) = (i + 1) * 10 // Assign 10, 20, 30, 40, 50
-next i
 
-let sum = numbers(0) + numbers(1) + numbers(2) + numbers(3) + numbers(4)
-print("Sum of numbers in array: " + str(sum))
-
-print("Value at index 3 is " + str(numbers(3)))
-
-// ======================================================
-// Section 2: DATA, READ, RESTORE Functionality Test
-// ======================================================
+// 2. Input
+print("--- 2. Testing Input ---")
+input user_name, "What is your name? "
+print("Nice to meet you, " + user_name)
 print("")
-print("--- Section 2: DATA/READ/RESTORE Tests ---")
 
-// Define multiple DATA statements and negative numbers.
-data "CPU", 3.5, "Intel"
-data "GPU", 2.8, "Nvidia"
-data "RAM", 32, "Corsair", -99
+// 3. Operators (Arithmetic, Comparison, Logical)
+print("--- 3. Testing Operators ---")
+let a = 10
+let b = 4
+print("a + b = " + str(a + b))
+print("a * b = " + str(a * b))
+print("a / b = " + str(a / b))
+print("a > b is " + str(a > b))
+print("a == b is " + str(a == b))
+print("Logical AND: (a > 5 and b < 5) is " + str(a > 5 and b < 5))
+print("Logical NOT: not(a == b) is " + str(not(a == b)))
+print("")
 
-print("First read-through of DATA:")
-// CORRECT: We do not need a 'let' statement before 'read'.
-// 'read' will create the variables automatically.
+// 4. Control Structures (IF/ELSEIF/ELSE)
+print("--- 4. Testing IF/ELSEIF/ELSE ---")
+let grade = 85
+if grade >= 80 and grade <= 100 then
+    print("Grade is A")
+else if grade >= 70 then
+    print("Grade is B")
+else
+    print("Grade is C or below")
+end if
+print("")
+
+// 5. Loops (FOR and WHILE)
+print("--- 5. Testing Loops ---")
+print("FOR loop (counting up):")
 for i = 1 to 3
-    read component, speed, brand
-    print("Component: " + component + ", Speed: " + str(speed) + "GHz, Brand: " + brand)
+    print(" i = " + str(i))
 next i
 
+print("FOR loop (counting down with step):")
+for j = 5 to 1 step -2
+    print(" j = " + str(j))
+next j
+
+print("WHILE loop:")
+let k = 3
+while k > 0
+    print(" k = " + str(k))
+    let k = k - 1
+wend
 print("")
-print("Testing RESTORE and reading again:")
-restore
-read component, speed, brand
-print("After RESTORE, first component is: " + component)
 
-// Reading just one more item continues from where it left off
-read component, speed, brand
-print("The next component is: " + component)
+// 6. Arrays (DIM)
+print("--- 6. Testing Arrays ---")
+// 1D Array
+dim scores(3)
+let scores(0) = 95
+let scores(1) = 88
+let scores(2) = 100
+print("Second score is: " + str(scores(1)))
+print("Length of scores array: " + str(len(scores)))
 
-// ======================================================
-// Section 3: Integration, Functions, and Edge Cases
-// ======================================================
+// 2D Array
+dim matrix(2, 3) // 2 rows, 3 columns
+let matrix(0, 0) = 1
+let matrix(1, 2) = 99
+print("Value in matrix at (1, 2) is: " + str(matrix(1, 2)))
 print("")
-print("--- Section 3: Integration and Edge Cases ---")
 
-print("Using READ to populate an array:")
-restore
-dim parts(3)
-dim brands(3)
-
-for i = 0 to 2
-    read parts(i), speed, brands(i)
-next i
-print("The brand of a " + parts(2) + " is " + brands(2))
-
-print("")
-print("Test function with nested return statements:")
-
-function abs_val(n)
-    if n < 0 then
-        return -n // Test unary minus and nested return
-    else
-        return n
-    end if
+// 7. Functions and Procedures
+print("--- 7. Testing Functions ---")
+function multiply(x, y)
+    return x * y
 end function
 
-print("Absolute value of -123 is: " + str(abs_val(-123)))
+let product = multiply(7, 6)
+print("7 * 6 = " + str(product))
 
+function show_message(msg)
+    print("Message: " + msg)
+end function
 
-// ======================================================
-// Section 4: Expected Error Tests (Uncomment to test)
-// ======================================================
+show_message("Functions are working!")
 print("")
-print("--- Section 4: Expected Error Tests ---")
-print("The following tests are commented out. Uncomment them one by one to see error handling.")
 
-// --- Array Errors ---
-// print("Testing array index out of bounds...")
-// dim test_array(2)
-// print(test_array(2)) // Should cause "Array index out of bounds" error
+// 8. DATA, READ, RESTORE
+print("--- 8. Testing DATA, READ, RESTORE ---")
+data "Apple", 1.25, "Banana", 0.75
 
-// --- DATA/READ Errors ---
-// print("Testing out of data error...")
-// restore
-// read a,b,c,d,e,f,g,h,i,j,k // Should cause "Out of DATA to read" error
+let fruit_name = ""
+let fruit_price = 0.0
 
+read fruit_name, fruit_price
+print("Read: " + fruit_name + ", Price: " + str(fruit_price))
+
+read fruit_name, fruit_price
+print("Read: " + fruit_name + ", Price: " + str(fruit_price))
+
+restore
+read fruit_name, fruit_price
+print("After RESTORE, read again: " + fruit_name + ", Price: " + str(fruit_price))
 print("")
-print("--- Test Suite Finished ---")
+
+// 9. Built-in Functions
+print("--- 9. Testing Other Built-in Functions ---")
+print("abs(-10.5) = " + str(abs(-10.5)))
+print("sqrt(16) = " + str(sqrt(16)))
+print("round(3.14159) = " + str(round(3.14159)))
+let start_time = time()
+print("Current time (timestamp): " + str(start_time))
+print("")
+
+
+// 10. Advanced Features: JIT (Just-In-Time) Compilation
+print("--- 10. Testing JIT Compilation (requires Numba) ---")
+jit_function calculate_pi(iterations)
+    let pi_div_4 = 0.0
+    let sign = 1.0
+    for i = 0 to iterations - 1
+        let term = 1.0 / (2.0 * i + 1.0)
+        let pi_div_4 = pi_div_4 + (sign * term)
+        let sign = -sign
+    next i
+    return pi_div_4 * 4.0
+end function
+
+let start_jit = time()
+let my_pi = calculate_pi(1000000)
+let end_jit = time()
+print("JIT Pi Calculation (1st run): " + str(my_pi) + " in " + str(end_jit - start_jit) + "s")
+
+let start_jit2 = time()
+let my_pi2 = calculate_pi(1000000)
+let end_jit2 = time()
+print("JIT Pi Calculation (2nd run): " + str(my_pi2) + " in " + str(end_jit2 - start_jit2) + "s")
+print("")
+
+
+// 11. Advanced Features: Asynchronous Programming
+print("--- 11. Testing Asynchronous Programming ---")
+
+async function fetch_data(source, delay)
+    print("Fetching from " + source + "...")
+    await sleep(delay)
+    print("...Finished fetching from " + source)
+    return "Data from " + source
+end function
+
+// Test 1: Using 'run async' to run tasks concurrently (fire and forget)
+print("Test 1: Firing off multiple tasks with RUN ASYNC...")
+let async_start = time()
+run async fetch_data("Server A", 2), fetch_data("Server B", 1)
+let async_end = time()
+
+print("Async tasks launched. Main program continues immediately.")
+print("Time elapsed during launch (should be very small): " + str(async_end - async_start) + "s")
+await sleep(2.5) // Wait for the longest task to finish before next test
+print("")
+
+
+// Test 2: Using 'await' to wait for a single result
+print("Test 2: Waiting for a single result with AWAIT...")
+let await_start = time()
+let single_result = await fetch_data("API C", 1.5)
+let await_end = time()
+print("Result received: '" + single_result + "'")
+print("Time elapsed for await (should be ~1.5s): " + str(await_end - await_start) + "s")
+print("")
+
+
+print("--- All tests completed. ---")
