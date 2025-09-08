@@ -4,7 +4,7 @@
 [Setup]
 AppName=Momentum Language
 AppVersion=1.0
-AppPublisher=Momentum Project
+AppPublisher=thirawat27
 DefaultDirName={autopf}\Momentum
 DefaultGroupName=Momentum Language
 DisableProgramGroupPage=yes
