@@ -321,4 +321,4 @@ print("JIT execution time: " + str(end_time - start_time) + "s")
 
 ## ใบอนุญาต (License)
 
-โปรเจกต์นี้อยู่ภายใต้ใบอนุญาตแบบ MIT - ดูรายละเอียดเพิ่มเติมได้ในไฟล์ `LICENSE`
+โปรเจกต์นี้อยู่ภายใต้ใบอนุญาต Apache-2.0 license - ดูรายละเอียดเพิ่มเติมได้ในไฟล์ `LICENSE`
