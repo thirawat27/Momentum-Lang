@@ -1,0 +1,4 @@
+build/
+dist/
+installer/Output/
+installer/*.exe
