@@ -2,7 +2,7 @@
 
 ![Momentum Logo](./momentum_logo.ico)  
 
-# ภาษา Momentum (`.mn`)
+# ภาษา Momentum หรือ Momentumlang (`.mn`)
 
 </div>
 
