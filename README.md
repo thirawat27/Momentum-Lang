@@ -2,7 +2,7 @@
 
 ![Momentum Logo](./momentum_logo.ico)  
 
-# คู่มือภาษา Momentum หรือ Momentumlang (`.mn`) ฉบับสมบูรณ์
+# คู่มือภาษา Momentum หรือ Momentumlang (`.mn`)
 
 </div>
 
@@ -14,7 +14,7 @@
 
 ## สารบัญ
 
-- [คู่มือภาษา Momentum หรือ Momentumlang (`.mn`) ฉบับสมบูรณ์](#คู่มือภาษา-momentum-หรือ-momentumlang-mn-ฉบับสมบูรณ์)
+- [คู่มือภาษา Momentum หรือ Momentumlang (`.mn`)](#คู่มือภาษา-momentum-หรือ-momentumlang-mn)
   - [สารบัญ](#สารบัญ)
   - [1. ปรัชญาและหลักการออกแบบ](#1-ปรัชญาและหลักการออกแบบ)
   - [2. เริ่มต้นใช้งาน (Getting Started)](#2-เริ่มต้นใช้งาน-getting-started)
