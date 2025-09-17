@@ -1,15 +1,15 @@
-; Inno Setup Script for Momentum Language (v1.0)
+; Inno Setup Script for Momentum Language (v2.0)
 ; Full integration with custom logo
 
 [Setup]
 AppName=Momentum Language
-AppVersion=1.0
+AppVersion=2.0
 AppPublisher=thirawat27
 DefaultDirName={autopf}\Momentum
 DefaultGroupName=Momentum Language
 DisableProgramGroupPage=yes
 OutputDir=.\Output
-OutputBaseFilename=Momentum_Setup_v1.0
+OutputBaseFilename=Momentum_Setup_v2.0
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern

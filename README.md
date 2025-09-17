@@ -2,413 +2,417 @@
 
 ![Momentum Logo](./momentum_logo.ico)  
 
-# ภาษา Momentum หรือ Momentumlang (`.mn`)
+# คู่มือภาษา Momentum หรือ Momentumlang (`.mn`) ฉบับสมบูรณ์
 
 </div>
 
-**Momentum** คือภาษาโปรแกรมสมัยใหม่ที่ได้รับการออกแบบมาเพื่อความเรียบง่าย, อ่านง่าย, และมีประสิทธิภาพสูง โดยได้รับแรงบันดาลใจจากจิตวิญญาณที่เข้าถึงง่ายของภาษา BASIC ในยุค 8-bit ผสมผสานกับพลังและความสามารถของภาษาโปรแกรมยุคใหม่อย่าง Python
+**Momentum** คือภาษาโปรแกรมสมัยใหม่ที่ได้รับการออกแบบมาเพื่อการคำนวณทางวิทยาศาสตร์, การจัดการข้อมูล, และการเขียนโปรแกรมทั่วไป โดยเน้นความเรียบง่าย, อ่านง่าย, และมีประสิทธิภาพสูง ได้รับแรงบันดาลใจจากจิตวิญญาณที่เข้าถึงง่ายของภาษา BASIC ผสมผสานกับพลังการคำนวณของ Python
 
-
-> **เป้าหมาย:** สร้างภาษาที่เรียนรู้ได้ง่ายเหมือน BASIC และมีพลังเหมือน Python
-
----
-
-## ที่มาและปรัชญา
-
-ภาษา Momentum ถือกำเนิดขึ้นจากโปรเจกต์ที่ต้องการ "อัปเกรด" ซอร์สโค้ดระดับตำนานของ **Microsoft 6502 BASIC** ให้เข้ากับยุคสมัยใหม่ โดยยังคงรักษาปรัชญาดั้งเดิมไว้ แต่แก้ไขจุดอ่อนที่สำคัญ:
-
-1. **จาก Spaghetti Code สู่ Structured Code:** เราได้ยกเลิก `GOTO` และแทนที่ด้วยโครงสร้างควบคุมที่ทันสมัย เช่น ฟังก์ชัน, Loop, และ `if/elseif/else` ที่ชัดเจน
-2. **ความเรียบง่ายต้องมาก่อน (Readability is King):** ไวยากรณ์ถูกออกแบบมาให้อ่านเหมือนภาษาอังกฤษ ไม่สนใจตัวพิมพ์เล็ก-ใหญ่ (Case-Insensitive) และลดสัญลักษณ์ที่ไม่จำเป็น
-3. **ปลอดภัยและชัดเจน (Safety and Clarity):** ใช้ระบบชนิดข้อมูลที่แข็งแกร่ง (Strongly Typed) แต่ยืดหยุ่น และบังคับให้มีการแปลงชนิดข้อมูลอย่างชัดเจน (Explicit Casting) เพื่อป้องกันข้อผิดพลาด
-4. **เริ่มต้นง่ายและรวดเร็ว:** เพียงแค่เขียนโค้ดในไฟล์ `.mn` แล้วรันผ่านอินเทอร์พรีเตอร์ ก็สามารถเห็นผลลัพธ์ได้ทันที พร้อมระบบแจ้งข้อผิดพลาดที่ระบุหมายเลขบรรทัดชัดเจน
-
-## คุณสมบัติหลัก (Features)
-
-- **ไวยากรณ์ที่สะอาดตา:** ไม่มี `{}` หรือ `;`
-- **Case-Insensitive:** `print`, `Print`, `PRINT` ถือเป็นคำสั่งเดียวกัน
-- **ชนิดข้อมูลพื้นฐาน:** Integer, Float, String, Array
-- **ตัวแปร:** กำหนดค่าด้วย `let`
-- **โครงสร้างควบคุม:** `if/then/elseif/else/endif`, `while/wend`, `for/to/step/next`
-- **ตัวดำเนินการตรรกะ:** รองรับ `AND`, `OR`, `NOT`
-- **ฟังก์ชันและโปรซีเยอร์:** รองรับฟังก์ชันที่คืนค่า (`return`) และโปรซีเยอร์ที่ไม่คืนค่า
-- **อาร์เรย์หลายมิติ (Multi-dimensional Arrays):** รองรับผ่านคำสั่ง `DIM a(rows, cols, ...)`
-- **การจัดการข้อมูลในตัว:** รองรับ `DATA`, `READ`, และ `RESTORE`
-- **ขอบเขตตัวแปร (Scoping):** ฟังก์ชันมี Local Scope ของตัวเอง
-- **ฟังก์ชันในตัว (Built-in Functions):** `str()`, `int()`, `float()`, `time()`, `len()`, `abs()`, `round()`, `type()`, `sqrt()` และอื่นๆ
-- **คอมเมนต์:** ใช้ `//` สำหรับคอมเมนต์บรรทัดเดียว
-- **Escape Characters:** รองรับ `\n`, `\t`, `\"`, `\\` ใน String
-- **ระบบกราฟิกเบื้องต้น:** สามารถวาดรูปทรงเรขาคณิต, กำหนดสี, และสร้างหน้าต่างกราฟิกได้
-- **คุณสมบัติขั้นสูง:**
-  - **JIT Compilation:** เพิ่มความเร็วในการคำนวณที่ซับซ้อนด้วย `jit_function` 
-  - **Asynchronous Programming:** รองรับการทำงานแบบไม่รอ (Non-blocking) ด้วย `async function`, `await`, และ `run async`
-  - **การคำนวณเมทริกซ์:** รองรับการบวก, ลบ, และคูณเมทริกซ์โดยตรง
-  - **การจัดการไฟล์และ OS:** มีฟังก์ชันสำหรับทำงานกับไฟล์และไดเรกทอรี
-
-## การติดตั้งและการรัน
-
-### 1. การติดตั้งสำหรับผู้ใช้งานทั่วไป (แนะนำ)
-
-วิธีที่ง่ายที่สุดในการเริ่มต้นใช้งาน Momentum คือการใช้ตัวติดตั้งของเรา
-
-1. ไปที่หน้า **Releases** ของโปรเจกต์บน GitHub
-2. ดาวน์โหลดไฟล์ `Momentum_Setup_vX.X.exe` เวอร์ชันล่าสุด
-3. รันตัวติดตั้งและทำตามขั้นตอนบนหน้าจอ
-   - คุณสามารถเลือกสร้าง Shortcut บน Desktop และเชื่อมโยงไฟล์ `.mn` กับโปรแกรมได้
-
-เมื่อติดตั้งเสร็จแล้ว restart คอมพิวเตอร์ของคุณ เมื่อเสร็จแล้ว คุณสามารถรันโปรแกรม Momentum ได้โดยการ **ดับเบิลคลิกที่ไฟล์ `.mn` ของคุณได้โดยตรง** หรือ ใช้คำสั่งดังต่อไปนี้ 
-
-```bash
-momentum your_script.mn
-```
-
-คำสั่งสั้น :
-
-```bash
-mn your_script.mn
-```
-
-### 2. การรันสำหรับนักพัฒนา (ทางเลือก)
-
-หากคุณต้องการรันจากซอร์สโค้ดโดยตรง:
-- คุณต้องมี **Python 3.11** หรือสูงกว่าติดตั้งในเครื่องของคุณ
-
-จากนั้นเปิด Terminal หรือ Command Prompt แล้วรันคำสั่ง:
-
-```bash
-python intp.py your_program.mn
-```
+เอกสารนี้เป็นคู่มือฉบับสมบูรณ์สำหรับภาษา Momentum หรือ Momentumlang ครอบคลุมตั้งแต่แนวคิดพื้นฐานไปจนถึงคุณสมบัติขั้นสูง เหมาะสำหรับผู้เริ่มต้นและนักพัฒนาที่มีประสบการณ์
 
 ---
 
-## คู่มือไวยากรณ์ฉบับสมบูรณ์ (Comprehensive Syntax Guide)
+## สารบัญ
 
-### 1. ตัวแปรและการกำหนดค่า (Variables & Assignment)
+- [คู่มือภาษา Momentum หรือ Momentumlang (`.mn`) ฉบับสมบูรณ์](#คู่มือภาษา-momentum-หรือ-momentumlang-mn-ฉบับสมบูรณ์)
+  - [สารบัญ](#สารบัญ)
+  - [1. ปรัชญาและหลักการออกแบบ](#1-ปรัชญาและหลักการออกแบบ)
+  - [2. เริ่มต้นใช้งาน (Getting Started)](#2-เริ่มต้นใช้งาน-getting-started)
+    - [การติดตั้ง](#การติดตั้ง)
+    - [การรันโปรแกรม](#การรันโปรแกรม)
+    - [โปรแกรมแรกของคุณ: Hello, World!](#โปรแกรมแรกของคุณ-hello-world)
+  - [3. พื้นฐานภาษา (Language Fundamentals)](#3-พื้นฐานภาษา-language-fundamentals)
+    - [โครงสร้างและไวยากรณ์ (Syntax and Structure)](#โครงสร้างและไวยากรณ์-syntax-and-structure)
+    - [ตัวแปรและการกำหนดค่า (Variables \& Assignment)](#ตัวแปรและการกำหนดค่า-variables--assignment)
+    - [ชนิดข้อมูล (Data Types)](#ชนิดข้อมูล-data-types)
+    - [ตัวดำเนินการ (Operators)](#ตัวดำเนินการ-operators)
+      - [ตารางตัวดำเนินการ (เรียงตามลำดับความสำคัญจากสูงไปต่ำ)](#ตารางตัวดำเนินการ-เรียงตามลำดับความสำคัญจากสูงไปต่ำ)
+  - [4. โครงสร้างควบคุม (Control Flow)](#4-โครงสร้างควบคุม-control-flow)
+    - [เงื่อนไข: `IF...THEN...ENDIF`](#เงื่อนไข-ifthenendif)
+    - [เลือกเงื่อนไข: `SWITCH...CASE...ENDSWITCH`](#เลือกเงื่อนไข-switchcaseendswitch)
+    - [การวนซ้ำ: `WHILE...WEND`](#การวนซ้ำ-whilewend)
+    - [การวนซ้ำ: `FOR` Loops (`FOR...TO` and `FOR EACH`)](#การวนซ้ำ-for-loops-forto-and-for-each)
+    - [การควบคุม Loop: `BREAK` และ `CONTINUE`](#การควบคุม-loop-break-และ-continue)
+  - [5. ฟังก์ชัน (Functions)](#5-ฟังก์ชัน-functions)
+    - [การนิยามและการเรียกใช้](#การนิยามและการเรียกใช้)
+    - [ขอบเขตของตัวแปร (Variable Scope)](#ขอบเขตของตัวแปร-variable-scope)
+  - [6. การจัดการข้อผิดพลาด (Error Handling)](#6-การจัดการข้อผิดพลาด-error-handling)
+  - [7. โมดูลและการจัดการโค้ด](#7-โมดูลและการจัดการโค้ด)
+  - [8. คุณสมบัติขั้นสูง (Advanced Features)](#8-คุณสมบัติขั้นสูง-advanced-features)
+    - [Pipe Operator (`|>`)](#pipe-operator-)
+    - [Asynchronous Programming](#asynchronous-programming)
+    - [JIT Compilation](#jit-compilation)
+    - [การดีบักด้วย `DEBUG`](#การดีบักด้วย-debug)
+  - [9. ระบบข้อมูลในตัว: `DATA`, `READ`, `RESTORE`](#9-ระบบข้อมูลในตัว-data-read-restore)
+  - [10. การมีส่วนร่วม (Contributing)](#10-การมีส่วนร่วม-contributing)
+  - [11. ใบอนุญาต (License)](#11-ใบอนุญาต-license)
 
-ใช้ `let` เพื่อกำหนดค่าให้กับตัวแปร ชื่อตัวแปรไม่สนใจตัวพิมพ์เล็ก-ใหญ่ (`myVar` และ `myvar` คือตัวเดียวกัน)
+---
 
-```mn
-// ตัวเลข
-let age = 30
-let price = 199.95
+## 1. ปรัชญาและหลักการออกแบบ
 
-// ข้อความ
-let name = "Momentum"
+-   **ความเรียบง่ายต้องมาก่อน (Simplicity First):** ไวยากรณ์ถูกออกแบบมาให้อ่านง่ายเหมือนภาษาอังกฤษ ลดสัญลักษณ์ที่ไม่จำเป็น เพื่อให้โค้ดสามารถสื่อสารเจตนาของผู้เขียนได้อย่างชัดเจน
+-   **ทรงพลังแต่เข้าถึงง่าย (Powerful yet Approachable):** ผสมผสานความง่ายของ BASIC เข้ากับความสามารถในการคำนวณทางวิทยาศาสตร์ของ Python ทำให้ผู้เริ่มต้นสามารถสร้างโปรแกรมที่มีประโยชน์ได้รวดเร็ว
+-   **โครงสร้างที่ชัดเจน (Structured and Explicit):** บังคับใช้การประกาศตัวแปรด้วย `LET` และใช้บล็อกคำสั่งที่ชัดเจน (`IF...ENDIF`, `FUNCTION...ENDFUNCTION`) เพื่อส่งเสริมการเขียนโค้ดที่เป็นระเบียบและลดข้อผิดพลาด
+-   **ครบเครื่องในตัว (Batteries Included):** มาพร้อมกับฟังก์ชันทางคณิตศาสตร์, สถิติ, และพีชคณิตเชิงเส้นที่จำเป็น ทำให้ไม่ต้องพึ่งพาไลบรารีภายนอกสำหรับงานคำนวณส่วนใหญ่
 
-// กำหนดค่าจากตัวแปรอื่น
-let new_price = price + 50.0
-print(new_price) // 249.95
-```
+---
 
-### 2. ชนิดข้อมูล และการแปลงชนิด (Data Types & Casting)
+## 2. เริ่มต้นใช้งาน (Getting Started)
 
-Momentum รองรับ `INTEGER`, `FLOAT`, `STRING` และ `ARRAY` ใช้ฟังก์ชันในตัวเพื่อแปลงชนิดข้อมูล
+### การติดตั้ง
+1.  ไปที่หน้า **Releases** ของโปรเจกต์บน GitHub
+2.  ดาวน์โหลดไฟล์ `Momentum_Setup_vX.X.exe` เวอร์ชันล่าสุด
+3.  รันตัวติดตั้งและทำตามขั้นตอนบนหน้าจอ
 
-```mn
-let num_str = "123"
-let num_int = int(num_str) // แปลงเป็น Integer
-let num_float = float("99.5") // แปลงเป็น Float
+### การรันโปรแกรม
+-   **รันไฟล์ `.mn`:**
+    ```bash
+    python intp.py your_program.mn
+    ```
+-   **รันโหมดโต้ตอบ (REPL):**
+    ```bash
+    python intp.py
+    ```
 
-print(type(num_int))   // แสดงผล: INTEGER
-print(type(num_float)) // แสดงผล: FLOAT
-
-let message = "Version " + str(3.0) // แปลงเลขเป็น String เพื่อต่อข้อความ
-print(message) // Version 3.0
-```
-
-### 3. การแสดงผลและการรับข้อมูล (Output & Input)
-
-- `print` สำหรับแสดงผล
-- `input` สำหรับรับค่าจากผู้ใช้
-
-```mn
-// แสดงผล
+### โปรแกรมแรกของคุณ: Hello, World!
+สร้างไฟล์ชื่อ `hello.mn` และใส่โค้ดต่อไปนี้:
+```momentum
+// my first program in Momentum
 print("Hello, World!")
-
-// รับค่า
-input user_name, "Please enter your name: "
-print("Welcome, " + user_name)
-
-// รับค่าโดยไม่มีข้อความแจ้ง
-input age
-print("You are " + str(age) + " years old.")
 ```
+รันโปรแกรมจาก Terminal:
+```bash
+python intp.py hello.mn
+```
+คุณจะเห็นข้อความ `Hello, World!` แสดงผลออกมา
 
-### 4. ตัวดำเนินการ (Operators)
+---
 
-#### ตัวดำเนินการทางคณิตศาสตร์
+## 3. พื้นฐานภาษา (Language Fundamentals)
 
-| ตัวดำเนินการ | ความหมาย |
-| :---: | :--- |
-| `+` | บวก (รวมถึงการบวกเมทริกซ์) |
-| `-` | ลบ (รวมถึงการลบเมทริกซ์) |
-| `*` | คูณ (รวมถึงการคูณเมทริกซ์ด้วยสเกลาร์) |
-| `/` | หาร |
+### โครงสร้างและไวยากรณ์ (Syntax and Structure)
+-   **Comments:** ใช้ `//` เพื่อเขียนคอมเมนต์ ทุกอย่างที่อยู่หลัง `//` ในบรรทัดนั้นจะถูกข้ามไป
+-   **Case-Insensitivity:** คีย์เวิร์ดของภาษา (`PRINT`, `LET`, `IF`, etc.) ไม่สนใจตัวพิมพ์เล็ก-ใหญ่ อย่างไรก็ตาม ชื่อตัวแปรจะถูกจัดการเป็นตัวพิมพ์เล็กทั้งหมดเป็นการภายในเพื่อความเป็นเอกภาพ (`MyVar` และ `myvar` คือตัวแปรเดียวกัน)
+-   **Blocks:** โค้ดถูกจัดกลุ่มเป็นบล็อกด้วยคีย์เวิร์ดเปิดและปิดที่ชัดเจน เช่น `IF...ENDIF`, `WHILE...WEND`, `FUNCTION...ENDFUNCTION`
+-   **Multiple Statements:** สามารถเขียนหลายคำสั่งในบรรทัดเดียวได้โดยใช้เครื่องหมายเซมิโคลอน (`;`) คั่น
+    ```momentum
+    let x = 10; let y = 20; print(x + y)
+    ```
 
-#### ตัวดำเนินการเปรียบเทียบ
+### ตัวแปรและการกำหนดค่า (Variables & Assignment)
+กฎสำคัญที่สุดคือ: **"ประกาศด้วย `LET`, กำหนดค่าใหม่โดยไม่มี `LET`"**
 
-| ตัวดำเนินการ | ความหมาย |
-| :---: | :--- |
-| `==` | เท่ากับ |
-| `!=` | ไม่เท่ากับ |
-| `>` | มากกว่า |
-| `<` | น้อยกว่า |
-| `>=` | มากกว่าหรือเท่ากับ |
-| `<=` | น้อยกว่าหรือเท่ากับ |
+-   **การประกาศ (Declaration):**
+    -   `LET var = value`: ประกาศตัวแปรพร้อมกำหนดค่าเริ่มต้น
+    -   `LET var`: ประกาศตัวแปรโดยไม่กำหนดค่าเริ่มต้น ตัวแปรนั้นจะมีค่าเป็น `None` ซึ่งมีประโยชน์สำหรับการจองชื่อตัวแปรไว้ก่อน
+-   **การกำหนดค่าใหม่ (Re-assignment):** เมื่อตัวแปรถูกประกาศแล้ว สามารถเปลี่ยนค่าได้โดยใช้ `=`
+    ```momentum
+    // ประกาศ
+    let score = 0
+    let player_name
 
-#### ตัวดำเนินการตรรกะ
+    // กำหนดค่าใหม่
+    score = 100
+    player_name = "Alex"
+    ```
 
-| ตัวดำเนินการ | ความหมาย |
-| :---: | :--- |
-| `AND` | และ |
-| `OR` | หรือ |
-| `NOT` | ไม่ |
+### ชนิดข้อมูล (Data Types)
 
-### 5. โครงสร้างควบคุม (Control Structures)
+-   **`INTEGER` & `FLOAT`**: ตัวเลขจำนวนเต็มและทศนิยม
+    ```momentum
+    let count = 10
+    let pi = 3.14159
+    ```
+-   **`STRING`**: ข้อความที่อยู่ภายใน `"` หรือ `'` รองรับ Escape Characters เช่น `\n` (ขึ้นบรรทัดใหม่) และ `\t` (แท็บ)
+    -   **F-Strings:** วิธีที่ทรงพลังในการแทรกนิพจน์ลงในข้อความ
+    ```momentum
+    let name = "Momentum"
+    let version = 1.1
+    print(f"Welcome to {name} v{version}. Two plus two is {2 + 2}.")
+    ```
+-   **`ARRAY` / `MATRIX`**: ชุดข้อมูลหลายมิติที่จัดเก็บตามลำดับ (0-based index) มีประสิทธิภาพสูงเพราะใช้ NumPy เป็นเบื้องหลัง
+    -   **การสร้าง:**
+        ```momentum
+        dim empty_array(10)      // สร้าง Array 1 มิติ 10 ช่อง (ค่าเริ่มต้นเป็น 0)
+        dim matrix = mat_zeros(3, 4) // สร้างเมทริกซ์ 3x4 ที่มีค่าเป็น 0 ทั้งหมด
+        let literal_array = [10, 20, "thirty"] // สร้าง Array จากค่า Literal
+        ```
+    -   **การเข้าถึงและกำหนดค่า:**
+        ```momentum
+        literal_array(0) = 15
+        print(literal_array(2)) // "thirty"
+        matrix(1, 2) = 99
+        ```
+-   **`DICTIONARY`**: ชุดข้อมูลแบบ Key-Value ที่ไม่มีลำดับ Key ต้องเป็น `STRING` เสมอ
+    ```momentum
+    let config = {"host": "localhost", "port": 8080, "is_active": 1}
+    print(f"Connecting to {config["host"]}:{config["port"]}")
+    config["is_active"] = 0 // เปลี่ยนค่า
+    ```
+-   **`NONE`**: ชนิดข้อมูลพิเศษที่หมายถึง "ไม่มีค่า" เป็นค่าเริ่มต้นของตัวแปรที่ประกาศโดยไม่มีการกำหนดค่า
 
-#### IF / ELSEIF / ELSE
+### ตัวดำเนินการ (Operators)
+-   **Truthiness and Falsiness:** ในเงื่อนไข (`IF`, `WHILE`), ค่า `0` และ `None` ถือเป็นเท็จ (false) ส่วนค่าอื่นๆ ทั้งหมด (รวมถึง String ที่ไม่ว่างเปล่า) ถือเป็นจริง (true)
 
-```mn
-let score = 75
+#### ตารางตัวดำเนินการ (เรียงตามลำดับความสำคัญจากสูงไปต่ำ)
+| ลำดับ | ประเภท | ตัวดำเนินการ | ตัวอย่าง |
+|:---:|:---|:---|:---|
+| 1 | Grouping & Access | `()`, `[]` | `(a + b) * c`, `my_array[0]` |
+| 2 | Unary | `NOT` | `NOT is_ready` |
+| 3 | Multiplicative | `*`, `/` | `price * quantity` |
+| 4 | Additive | `+`, `-` | `subtotal + tax` |
+| 5 | Relational | `>`, `<`, `>=`, `<=` | `score >= 90` |
+| 6 | Equality | `==`, `!=` | `name == "admin"` |
+| 7 | Logical AND | `AND` | `is_logged_in AND has_permission` |
+| 8 | Logical OR | `OR` | `is_admin OR is_owner` |
+| 9 | Chaining | `|>` (Pipe) | `data |> trim |> upper` |
+| 10 | Assignment | `=` | `x = 10` |
 
-if score >= 80 then
-    print("Grade A")
-else if score >= 70 then
-    print("Grade is B")
+---
+
+## 4. โครงสร้างควบคุม (Control Flow)
+
+### เงื่อนไข: `IF...THEN...ENDIF`
+**Syntax:**
+```momentum
+IF condition THEN
+    ...
+ELSE IF another_condition THEN
+    ...
+ELSE
+    ...
+END IF
+```
+**Example:**
+```momentum
+let temperature = 32
+if temperature > 30 then
+    print("It's hot.")
+else if temperature < 15 then
+    print("It's cold.")
 else
-    print("Grade C or lower")
+    print("It's pleasant.")
 end if
 ```
 
-#### WHILE Loop
+### เลือกเงื่อนไข: `SWITCH...CASE...ENDSWITCH`
+**Syntax:**
+```momentum
+SWITCH expression
+    CASE value1, value2:
+        ...
+    CASE value3:
+        ...
+    DEFAULT:
+        ...
+END SWITCH
+```
+**Note:** `SWITCH` ใน Momentum ไม่มีการ "fall-through" เมื่อเจอ `CASE` ที่ตรงกันแล้ว จะทำงานในบล็อกนั้นและออกจาก `SWITCH` ทันที
+```momentum
+let http_status = 404
+switch http_status
+    case 200:
+        print("OK")
+    case 403, 404:
+        print("Client Error: Not Found or Forbidden")
+    case 500:
+        print("Server Error")
+    default:
+        print("Unknown status")
+end switch
+```
 
-```mn
-let count = 3
-while count > 0
-  print("Countdown: " + str(count))
-  let count = count - 1
+### การวนซ้ำ: `WHILE...WEND`
+**Syntax:** `WHILE condition ... WEND`
+```momentum
+let buffer = ""
+while len(buffer) < 10
+    // สมมติว่า get_char() เป็นฟังก์ชันที่อ่านตัวอักษรทีละตัว
+    // buffer = buffer + get_char() 
 wend
-print("Blast off!")
 ```
 
-#### FOR Loop
-
-```mn
-// นับขึ้นทีละ 1 (default step)
-for i = 1 to 3
-  print("Up: " + str(i))
-next i
-
-// นับถอยหลังทีละ 2
-for j = 10 to 0 step -2
-  print("Down: " + str(j))
-next j
-```
-
-### 6. ฟังก์ชันและโปรซีเยอร์ (Functions & Procedures)
-
-ฟังก์ชันสามารถคืนค่าด้วย `return` หรือไม่คืนค่าก็ได้ (เรียกว่า "โปรซีเยอร์")
-
-```mn
-// ฟังก์ชันคืนค่า
-function add(a, b)
-  return a + b
-end function
-
-let sum = add(10, 5)
-print("Sum is: " + str(sum))
-
-// โปรซีเยอร์ (ไม่คืนค่า)
-function greet(name)
-    print("Hello, " + name)
-end function
-
-greet("World") // เรียกใช้ได้โดยตรง
-```
-
-### 7. อาร์เรย์ (Arrays)
-
-ใช้ `dim` เพื่อประกาศอาร์เรย์ ดัชนีเริ่มต้นที่ 0
-
-```mn
-// อาร์เรย์ 1 มิติ
-dim names(3) // สร้างอาร์เรย์ขนาด 3 (index 0, 1, 2)
-let names(0) = "Alice"
-let names(1) = "Bob"
-let names(2) = 123 // หมายเหตุ: อาร์เรย์สามารถเก็บข้อมูลคละประเภทได้
-print(names(1)) // Bob
-
-// อาร์เรย์ 2 มิติ (Matrix 2x3)
-dim matrix(2, 3)
-let matrix(1, 2) = 99
-print("Matrix value: " + str(matrix(1, 2))) // 99
-```
-
-### 8. การจัดการข้อมูลแบบฝัง (Embedded Data)
-
-ใช้ `DATA` เพื่อฝังข้อมูลไว้ในโค้ด, `READ` เพื่ออ่าน, และ `RESTORE` เพื่อรีเซ็ตตัวชี้กลับไปที่ข้อมูลตัวแรก
-
-```mn
-data 10, 20, "Hello", 30.5
-
-dim my_vals(4)
-
-read my_vals(0) // 10
-read my_vals(1) // 20
-read my_vals(2) // "Hello"
-read my_vals(3) // 30.5
-
-print("Third item: " + my_vals(2)) // Hello
-
-restore // รีเซ็ตกลับไปที่ 10
-read first_item
-print("First item again: " + str(first_item)) // 10
-```
-
-### 9. คุณสมบัติขั้นสูง (Advanced Features)
-
-#### Asynchronous Programming
-
-ใช้สำหรับงานที่ต้องรอ เช่น การดาวน์โหลดข้อมูล หรือ I/O เพื่อไม่ให้โปรแกรมหยุดชะงัก
-
-**รูปแบบที่ 1: `run async` - รันงานพร้อมกันโดยไม่ต้องรอ**  
-ใช้เมื่อต้องการสั่งให้งานหลายๆ อย่างเริ่มทำงานพร้อมกันในเบื้องหลัง และให้โปรแกรมหลักทำงานต่อไปทันที
-
-```mn
-async function long_task(name, delay)
-    print("Task " + name + " started.")
-    await sleep(delay) // sleep() เป็นฟังก์ชัน async ในตัว
-    print("Task " + name + " finished.")
-end function
-
-print("Starting concurrent tasks...")
-run async long_task("A", 2), long_task("B", 1)
-print("Main program continues immediately.") // บรรทัดนี้จะแสดงผลทันที
-```
-
-**รูปแบบที่ 2: `await` - หยุดรอเพื่อรับผลลัพธ์**  
-ใช้เมื่อต้องการเรียกฟังก์ชัน async และต้องรอจนกว่าจะได้ค่า `return` กลับมาเพื่อนำไปใช้งานต่อ
-
-```mn
-async function fetch_data(source)
-    await sleep(1.5) // จำลองการรอข้อมูลจาก network
-    return "Data from " + source
-end function
-
-print("Fetching user data...")
-let user_data = await fetch_data("API Server") // โปรแกรมจะหยุดรอ 1.5 วินาที
-print("Result received: " + user_data) // ...จากนั้นจึงทำงานต่อ
-```
-
-#### JIT Compilation
-
-ใช้ `jit_function` เพื่อคอมไพล์โค้ดส่วนที่คำนวณหนักๆ ให้เป็นภาษาเครื่อง ณ เวลาที่รัน ทำให้ทำงานได้เร็วขึ้นมาก (เหมาะกับ Loop และคณิตศาสตร์)
-
-**ข้อจำกัด:** `jit_function` รองรับเฉพาะคำสั่งที่เกี่ยวกับการคำนวณทางคณิตศาสตร์ (`+`, `-`, `*`, `/`), ตรรกะ (`if/else`), Loop (`for`) และการคืนค่า (`return`) เท่านั้น ไม่สามารถใช้คำสั่ง I/O เช่น `print`, `input` หรือเรียกฟังก์ชัน Momentum ปกติภายใน `jit_function` ได้
-
-```mn
-// ฟังก์ชันนี้จะถูกคอมไพล์ด้วย Numba
-jit_function fast_calc(iterations)
-    let result = 0.0
-    for i = 1 to iterations
-        let result = result + i
+### การวนซ้ำ: `FOR` Loops (`FOR...TO` and `FOR EACH`)
+1.  **`FOR...TO...STEP`**: สำหรับการวนซ้ำตามจำนวนรอบที่แน่นอน
+    ```momentum
+    // พิมพ์เลขคู่จาก 10 ถึง 2
+    for i = 10 to 2 step -2
+        print(i)
     next i
-    return result
+    ```
+2.  **`FOR EACH...IN`**: สำหรับวนซ้ำสมาชิกทุกตัวใน Collection (เช่น Array)
+    ```momentum
+    let file_list = os_list_dir(".")
+    print("Files in current directory:")
+    for each filename in file_list
+        if os_is_file(filename) then
+            print(f"- {filename}")
+        end if
+    next filename
+    ```
+
+### การควบคุม Loop: `BREAK` และ `CONTINUE`
+-   `BREAK`: ออกจาก Loop ทันที (ใช้ได้กับ `FOR` และ `WHILE`)
+-   `CONTINUE`: ข้ามรอบปัจจุบันและไปเริ่มรอบถัดไปทันที
+
+---
+
+## 5. ฟังก์ชัน (Functions)
+
+### การนิยามและการเรียกใช้
+ฟังก์ชันช่วยให้คุณสามารถจัดกลุ่มโค้ดที่ทำงานเฉพาะอย่างไว้ด้วยกันและเรียกใช้ซ้ำได้
+```momentum
+function is_valid_email(email)
+    // การตรวจสอบแบบง่าย
+    if len(email) > 5 and len(split(email, "@")) == 2 then
+        return 1 // True
+    else
+        return 0 // False
+    end if
 end function
 
-let start_time = time()
-let total = fast_calc(10000000)
-let end_time = time()
-
-print("JIT result: " + str(total))
-print("JIT execution time: " + str(end_time - start_time) + "s")
-```
-
-### 10. การคำนวณเมทริกซ์ (Matrix Operations)
-
-Momentum รองรับการคำนวณกับอาร์เรย์ 2 มิติ (เมทริกซ์) โดยใช้ตัวดำเนินการพื้นฐานและฟังก์ชันเสริม
-
-```mn
-// สร้างเมทริกซ์
-dim A(2, 2)
-let A(0,0)=1
-let A(0,1)=2
-let A(1,0)=3
-let A(1,1)=4
-
-dim B(2, 2)
-let B(0,0)=5
-let B(0,1)=6
-let B(1,0)=7
-let B(1,1)=8
-
-// การบวกเมทริกซ์ (Element-wise)
-let C = A + B 
-// C คือ [[6, 8], [10, 12]]
-
-// การคูณด้วยสเกลาร์
-let D = C * 10
-// D คือ [[60, 80], [100, 120]]
-
-// การคูณเมทริกซ์ (Dot Product)
-dim E = mat_mul(A, B)
-// E คือ [[19, 22], [43, 50]]
-
-print("Rows in A: " + str(rows(A))) // 2
-print("Cols in A: " + str(cols(A))) // 2
-```
-
-### 11. การจัดการไฟล์และระบบ (File & OS Management)
-
-Momentum มีฟังก์ชันสำหรับจัดการไฟล์และไดเรกทอรีในระบบของคุณ
-
-| ฟังก์ชัน | คำอธิบาย |
-| :--- | :--- |
-| `os_cwd()` | คืนค่าไดเรกทอรีที่ทำงานอยู่ปัจจุบัน |
-| `os_list_dir(path)` | คืนค่าเป็นอาร์เรย์ของชื่อไฟล์และโฟลเดอร์ใน `path` |
-| `os_exists(path)` | คืนค่า 1 ถ้า `path` มีอยู่จริง, มิฉะนั้นเป็น 0 |
-| `os_is_file(path)` | คืนค่า 1 ถ้า `path` เป็นไฟล์ |
-| `os_is_dir(path)` | คืนค่า 1 ถ้า `path` เป็นไดเรกทอรี |
-| `os_make_dir(path)` | สร้างไดเรกทอรี (และไดเรกทอรีแม่ทั้งหมดถ้าจำเป็น) |
-| `os_remove_file(path)` | ลบไฟล์ |
-| `os_rename(src, dst)` | เปลี่ยนชื่อหรือย้ายไฟล์/ไดเรกทอรีจาก `src` ไป `dst` |
-
-**ตัวอย่างการใช้งาน:**
-```mn
-print("Current directory: " + os_cwd())
-
-let dir_name = "my_test_dir"
-if os_exists(dir_name) == 0 then
-    print("Creating directory: " + dir_name)
-    os_make_dir(dir_name)
+let email = "test@example.com"
+if is_valid_email(email) then
+    print("Email format is valid.")
 end if
+```
 
-print("Listing contents of current directory:")
-let contents = os_list_dir(".")
-for i = 0 to len(contents) - 1
-    print("- " + contents(i))
+### ขอบเขตของตัวแปร (Variable Scope)
+-   **Global Scope:** ตัวแปรที่ประกาศนอกฟังก์ชันใดๆ สามารถเข้าถึงได้จากทุกที่
+-   **Local Scope:** พารามิเตอร์และตัวแปรที่ประกาศด้วย `LET` ภายในฟังก์ชัน จะมีอยู่แค่ในฟังก์ชันนั้นๆ
+```momentum
+let app_name = "My App" // Global
+
+function print_header()
+    let version = "1.0" // Local to print_header
+    print(f"{app_name} - Version {version}")
+end function
+
+print_header()
+// print(version) // <-- จะเกิด Error เพราะ version เป็น Local
+```
+
+---
+
+## 6. การจัดการข้อผิดพลาด (Error Handling)
+ใช้ `TRY...CATCH` เพื่อจัดการกับข้อผิดพลาดที่อาจเกิดขึ้นขณะโปรแกรมทำงาน (Runtime Errors) เช่น การหารด้วยศูนย์ หรือการเข้าถึงไฟล์ที่ไม่มีอยู่จริง
+```momentum
+function get_config(filename)
+    try
+        let content = file_read(filename)
+        return json_parse(content)
+    catch err
+        print(f"Could not load config '{filename}': {err}")
+        // คืนค่า config เริ่มต้นถ้าไฟล์มีปัญหา
+        return {"default": 1} 
+    end try
+end function
+```
+
+---
+
+## 7. โมดูลและการจัดการโค้ด
+ใช้ `IMPORT "filename.mn"` เพื่อนำเข้าฟังก์ชันและตัวแปรทั้งหมดจากไฟล์อื่น ซึ่งเป็นหัวใจของการสร้างโปรแกรมขนาดใหญ่ที่มีการจัดระเบียบที่ดี
+
+**ไฟล์ `string_helpers.mn`**
+```momentum
+function is_empty(text)
+    return len(trim(text)) == 0
+end function
+```
+
+**ไฟล์ `main.mn`**
+```momentum
+import "string_helpers.mn"
+
+let user_input = ""
+if is_empty(user_input) then
+    print("Input cannot be empty.")
+end if
+```
+
+---
+
+## 8. คุณสมบัติขั้นสูง (Advanced Features)
+
+### Pipe Operator (`|>`)
+ทำให้การเรียกฟังก์ชันซ้อนกัน (nested function calls) อ่านง่ายขึ้นโดยเปลี่ยนลำดับการเขียนให้เป็นเหมือนลำดับการทำงาน
+```momentum
+let raw_data = "   apple, BANANA, Cherry   "
+
+// แบบดั้งเดิม (อ่านจากในไปนอก)
+// let processed = split(upper(trim(raw_data)), ",")
+
+// แบบใช้ Pipe (อ่านจากซ้ายไปขวา)
+let processed = raw_data |> trim |> upper |> split(",")
+
+debug processed // [DEBUG] processed (ARRAY): ['APPLE' 'BANANA' 'CHERRY']
+```
+
+### Asynchronous Programming
+**แนวคิด:** ใช้สำหรับงานที่ต้อง "รอ" (เช่น รอการตอบกลับจากเครือข่าย, รอการอ่านไฟล์ขนาดใหญ่) โดยไม่หยุดการทำงานของโปรแกรมส่วนอื่น
+```momentum
+async function fetch_data(url)
+    print(f"Fetching from {url}...")
+    await sleep(1.5) // จำลองการรอ Network
+    return f"Data from {url}"
+end function
+
+// รันสอง task พร้อมกันโดยไม่รอให้อันแรกเสร็จก่อน
+run async fetch_data("API 1"), fetch_data("API 2")
+
+print("Main program continues while tasks are running...")
+await sleep(2) // รอให้ task ทั้งหมดทำงานเสร็จ
+print("All fetching complete.")
+```
+
+### JIT Compilation
+**แนวคิด:** แปลงโค้ด Momentum เป็น Machine Code ประสิทธิภาพสูงขณะรัน (Just-In-Time) เหมาะสำหรับฟังก์ชันที่มีการคำนวณทางคณิตศาสตร์ใน Loop จำนวนมาก
+-   **ข้อจำกัด:** `jit_function` รองรับเฉพาะการทำงานกับตัวเลขและฟังก์ชันคณิตศาสตร์พื้นฐาน ไม่สามารถเรียกใช้ฟังก์ชันจัดการ String หรือ I/O ได้
+```momentum
+jit_function mandelbrot_iterations(cx, cy, max_iter)
+    let x = 0.0; let y = 0.0
+    let iter = 0
+    while x*x + y*y <= 4 and iter < max_iter
+        let xtemp = x*x - y*y + cx
+        y = 2*x*y + cy
+        x = xtemp
+        iter = iter + 1
+    next
+    return iter
+end function
+```
+
+### การดีบักด้วย `DEBUG`
+เป็นเครื่องมือที่ง่ายและรวดเร็วสำหรับตรวจสอบค่าของนิพจน์ใดๆ ขณะที่โปรแกรมทำงาน
+```momentum
+let config = {"user": "admin", "retries": 3}
+debug config["user"] == "admin"
+debug config["retries"] * 2
+```
+
+---
+
+## 9. ระบบข้อมูลในตัว: `DATA`, `READ`, `RESTORE`
+เป็นวิธีที่เรียบง่ายในการฝังชุดข้อมูลไว้ในซอร์สโค้ดโดยตรง เหมาะสำหรับสคริปต์ขนาดเล็กหรือโปรแกรมเพื่อการศึกษา
+```momentum
+data "apple", 1.50, "banana", 0.75, "cherry", 3.00
+
+print("Fruit Prices:")
+for i = 1 to 3
+    let fruit_name, price
+    read fruit_name, price
+    print(f"- {fruit_name}: ${price}")
 next i
 ```
-**ข้อควรระวัง:** การใช้ฟังก์ชันจัดการไฟล์ เช่น `os_remove_file` เป็นการกระทำที่ลบข้อมูลอย่างถาวร โปรดใช้งานด้วยความระมัดระวัง
 
-### 12. ฟังก์ชันในตัว (Built-in Functions)
+---
 
-- **ทั่วไป:** `str()`, `int()`, `float()`, `time()`, `len()`, `abs()`, `round()`, `type()`, `sqrt()`
-- **Async:** `sleep(seconds)` (ต้องใช้กับ `await`)
-- **เมทริกซ์:** `mat_mul(A, B)`, `rows(matrix)`, `cols(matrix)`
-- **ระบบปฏิบัติการ:** `os_cwd()`, `os_list_dir(path)`, `os_exists(path)`, `os_is_file(path)`, `os_is_dir(path)`, `os_make_dir(path)`, `os_remove_file(path)`, `os_rename(src, dst)`
-- **กราฟิก:**
-  - `gfx_init(width, height, title)`: สร้างหน้าต่าง
-  - `gfx_set_color(r, g, b)`: กำหนดสี (0-255)
-  - `gfx_draw_line(x1, y1, x2, y2)`: วาดเส้น
-  - `gfx_draw_rect(x, y, w, h, fill)`: วาดสี่เหลี่ยม (fill=1 คือทึบ)
-  - `gfx_draw_circle(cx, cy, r, fill)`: วาดวงกลม (fill=1 คือทึบ)
-  - `gfx_update()`: อัปเดตการวาดบนหน้าจอ
-  - `gfx_wait()`: รอจนกว่าผู้ใช้จะปิดหน้าต่าง
-
-## การมีส่วนร่วม (Contributing)
+## 10. การมีส่วนร่วม (Contributing)
 
 เรายินดีต้อนรับผู้ที่มีส่วนร่วมทุกคน! หากคุณมีไอเดีย, ต้องการแก้ไขบั๊ก, หรือเพิ่มฟีเจอร์ใหม่ๆ กรุณาเปิด Issue หรือส่ง Pull Request เข้ามาใน Repository นี้
 
-## ใบอนุญาต (License)
+## 11. ใบอนุญาต (License)
 
 โปรเจกต์นี้อยู่ภายใต้ใบอนุญาต Apache-2.0 license - ดูรายละเอียดเพิ่มเติมได้ในไฟล์ `LICENSE`
