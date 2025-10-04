@@ -20,7 +20,7 @@
   - [2. เริ่มต้นใช้งาน (Getting Started)](#2-เริ่มต้นใช้งาน-getting-started)
     - [การติดตั้ง](#การติดตั้ง)
     - [การรันโปรแกรม](#การรันโปรแกรม)
-    - [โปรแกรมแรกของคุณ: Hello, World!](#โปรแกรมแรกของคุณ-hello-world)
+    - [โปรแกรมแรกของคุณ Hello, World!](#โปรแกรมแรกของคุณ-hello-world)
   - [3. พื้นฐานภาษา (Language Fundamentals)](#3-พื้นฐานภาษา-language-fundamentals)
     - [โครงสร้างและไวยากรณ์ (Syntax and Structure)](#โครงสร้างและไวยากรณ์-syntax-and-structure)
     - [ตัวแปรและการกำหนดค่า (Variables \& Assignment)](#ตัวแปรและการกำหนดค่า-variables--assignment)
@@ -28,11 +28,11 @@
     - [ตัวดำเนินการ (Operators)](#ตัวดำเนินการ-operators)
       - [ตารางตัวดำเนินการ (เรียงตามลำดับความสำคัญจากสูงไปต่ำ)](#ตารางตัวดำเนินการ-เรียงตามลำดับความสำคัญจากสูงไปต่ำ)
   - [4. โครงสร้างควบคุม (Control Flow)](#4-โครงสร้างควบคุม-control-flow)
-    - [เงื่อนไข: `IF...THEN...ENDIF`](#เงื่อนไข-ifthenendif)
-    - [เลือกเงื่อนไข: `SWITCH...CASE...ENDSWITCH`](#เลือกเงื่อนไข-switchcaseendswitch)
-    - [การวนซ้ำ: `WHILE...WEND`](#การวนซ้ำ-whilewend)
-    - [การวนซ้ำ: `FOR` Loops (`FOR...TO` and `FOR EACH`)](#การวนซ้ำ-for-loops-forto-and-for-each)
-    - [การควบคุม Loop: `BREAK` และ `CONTINUE`](#การควบคุม-loop-break-และ-continue)
+    - [เงื่อนไข `IF...THEN...ENDIF`](#เงื่อนไข-ifthenendif)
+    - [เลือกเงื่อนไข `SWITCH...CASE...ENDSWITCH`](#เลือกเงื่อนไข-switchcaseendswitch)
+    - [การวนซ้ำ `WHILE...WEND`](#การวนซ้ำ-whilewend)
+    - [การวนซ้ำ `FOR` Loops (`FOR...TO` and `FOR EACH`)](#การวนซ้ำ-for-loops-forto-and-for-each)
+    - [การควบคุม Loop `BREAK` และ `CONTINUE`](#การควบคุม-loop-break-และ-continue)
   - [5. ฟังก์ชัน (Functions)](#5-ฟังก์ชัน-functions)
     - [การนิยามและการเรียกใช้](#การนิยามและการเรียกใช้)
     - [ขอบเขตของตัวแปร (Variable Scope)](#ขอบเขตของตัวแปร-variable-scope)
@@ -43,7 +43,7 @@
     - [Asynchronous Programming](#asynchronous-programming)
     - [JIT Compilation](#jit-compilation)
     - [การดีบักด้วย `DEBUG`](#การดีบักด้วย-debug)
-  - [9. ระบบข้อมูลในตัว: `DATA`, `READ`, `RESTORE`](#9-ระบบข้อมูลในตัว-data-read-restore)
+  - [9. ระบบข้อมูลในตัว `DATA`, `READ`, `RESTORE`](#9-ระบบข้อมูลในตัว-data-read-restore)
   - [10. การมีส่วนร่วม (Contributing)](#10-การมีส่วนร่วม-contributing)
   - [11. ใบอนุญาต (License)](#11-ใบอนุญาต-license)
 
@@ -51,10 +51,10 @@
 
 ## 1. ปรัชญาและหลักการออกแบบ
 
--   **ความเรียบง่ายต้องมาก่อน (Simplicity First):** ไวยากรณ์ถูกออกแบบมาให้อ่านง่ายเหมือนภาษาอังกฤษ ลดสัญลักษณ์ที่ไม่จำเป็น เพื่อให้โค้ดสามารถสื่อสารเจตนาของผู้เขียนได้อย่างชัดเจน
--   **ทรงพลังแต่เข้าถึงง่าย (Powerful yet Approachable):** ผสมผสานความง่ายของ BASIC เข้ากับความสามารถในการคำนวณทางวิทยาศาสตร์ของ Python ทำให้ผู้เริ่มต้นสามารถสร้างโปรแกรมที่มีประโยชน์ได้รวดเร็ว
--   **โครงสร้างที่ชัดเจน (Structured and Explicit):** บังคับใช้การประกาศตัวแปรด้วย `LET` และใช้บล็อกคำสั่งที่ชัดเจน (`IF...ENDIF`, `FUNCTION...ENDFUNCTION`) เพื่อส่งเสริมการเขียนโค้ดที่เป็นระเบียบและลดข้อผิดพลาด
--   **ครบเครื่องในตัว (Batteries Included):** มาพร้อมกับฟังก์ชันทางคณิตศาสตร์, สถิติ, และพีชคณิตเชิงเส้นที่จำเป็น ทำให้ไม่ต้องพึ่งพาไลบรารีภายนอกสำหรับงานคำนวณส่วนใหญ่
+-   **ความเรียบง่ายต้องมาก่อน (Simplicity First)** ไวยากรณ์ถูกออกแบบมาให้อ่านง่ายเหมือนภาษาอังกฤษ ลดสัญลักษณ์ที่ไม่จำเป็น เพื่อให้โค้ดสามารถสื่อสารเจตนาของผู้เขียนได้อย่างชัดเจน
+-   **ทรงพลังแต่เข้าถึงง่าย (Powerful yet Approachable)** ผสมผสานความง่ายของ BASIC เข้ากับความสามารถในการคำนวณทางวิทยาศาสตร์ของ Python ทำให้ผู้เริ่มต้นสามารถสร้างโปรแกรมที่มีประโยชน์ได้รวดเร็ว
+-   **โครงสร้างที่ชัดเจน (Structured and Explicit)** บังคับใช้การประกาศตัวแปรด้วย `LET` และใช้บล็อกคำสั่งที่ชัดเจน (`IF...ENDIF`, `FUNCTION...ENDFUNCTION`) เพื่อส่งเสริมการเขียนโค้ดที่เป็นระเบียบและลดข้อผิดพลาด
+-   **ครบเครื่องในตัว (Batteries Included)** มาพร้อมกับฟังก์ชันทางคณิตศาสตร์, สถิติ, และพีชคณิตเชิงเส้นที่จำเป็น ทำให้ไม่ต้องพึ่งพาไลบรารีภายนอกสำหรับงานคำนวณส่วนใหญ่
 
 ---
 
@@ -66,22 +66,22 @@
 3.  รันตัวติดตั้งและทำตามขั้นตอนบนหน้าจอ
 
 ### การรันโปรแกรม
--   **รันไฟล์ `.mn`:**
+-   **รันไฟล์ `.mn`**
     ```bash
     python intp.py your_program.mn
     ```
--   **รันโหมดโต้ตอบ (REPL):**
+-   **รันโหมดโต้ตอบ (REPL)**
     ```bash
     python intp.py
     ```
 
-### โปรแกรมแรกของคุณ: Hello, World!
-สร้างไฟล์ชื่อ `hello.mn` และใส่โค้ดต่อไปนี้:
+### โปรแกรมแรกของคุณ Hello, World!
+สร้างไฟล์ชื่อ `hello.mn` และใส่โค้ดต่อไปนี้
 ```momentum
 // my first program in Momentum
 print("Hello, World!")
 ```
-รันโปรแกรมจาก Terminal:
+รันโปรแกรมจาก Terminal
 ```bash
 python intp.py hello.mn
 ```
@@ -92,21 +92,21 @@ python intp.py hello.mn
 ## 3. พื้นฐานภาษา (Language Fundamentals)
 
 ### โครงสร้างและไวยากรณ์ (Syntax and Structure)
--   **Comments:** ใช้ `//` เพื่อเขียนคอมเมนต์ ทุกอย่างที่อยู่หลัง `//` ในบรรทัดนั้นจะถูกข้ามไป
--   **Case-Insensitivity:** คีย์เวิร์ดของภาษา (`PRINT`, `LET`, `IF`, etc.) ไม่สนใจตัวพิมพ์เล็ก-ใหญ่ อย่างไรก็ตาม ชื่อตัวแปรจะถูกจัดการเป็นตัวพิมพ์เล็กทั้งหมดเป็นการภายในเพื่อความเป็นเอกภาพ (`MyVar` และ `myvar` คือตัวแปรเดียวกัน)
--   **Blocks:** โค้ดถูกจัดกลุ่มเป็นบล็อกด้วยคีย์เวิร์ดเปิดและปิดที่ชัดเจน เช่น `IF...ENDIF`, `WHILE...WEND`, `FUNCTION...ENDFUNCTION`
--   **Multiple Statements:** สามารถเขียนหลายคำสั่งในบรรทัดเดียวได้โดยใช้เครื่องหมายเซมิโคลอน (`;`) คั่น
+-   **Comments** ใช้ `//` เพื่อเขียนคอมเมนต์ ทุกอย่างที่อยู่หลัง `//` ในบรรทัดนั้นจะถูกข้ามไป
+-   **Case-Insensitivity** คีย์เวิร์ดของภาษา (`PRINT`, `LET`, `IF`, etc.) ไม่สนใจตัวพิมพ์เล็ก-ใหญ่ อย่างไรก็ตาม ชื่อตัวแปรจะถูกจัดการเป็นตัวพิมพ์เล็กทั้งหมดเป็นการภายในเพื่อความเป็นเอกภาพ (`MyVar` และ `myvar` คือตัวแปรเดียวกัน)
+-   **Blocks** โค้ดถูกจัดกลุ่มเป็นบล็อกด้วยคีย์เวิร์ดเปิดและปิดที่ชัดเจน เช่น `IF...ENDIF`, `WHILE...WEND`, `FUNCTION...ENDFUNCTION`
+-   **Multiple Statements** สามารถเขียนหลายคำสั่งในบรรทัดเดียวได้โดยใช้เครื่องหมายเซมิโคลอน (`;`) คั่น
     ```momentum
     let x = 10; let y = 20; print(x + y)
     ```
 
 ### ตัวแปรและการกำหนดค่า (Variables & Assignment)
-กฎสำคัญที่สุดคือ: **"ประกาศด้วย `LET`, กำหนดค่าใหม่โดยไม่มี `LET`"**
+กฎสำคัญที่สุดคือ **"ประกาศด้วย `LET`, กำหนดค่าใหม่โดยไม่มี `LET`"**
 
--   **การประกาศ (Declaration):**
-    -   `LET var = value`: ประกาศตัวแปรพร้อมกำหนดค่าเริ่มต้น
-    -   `LET var`: ประกาศตัวแปรโดยไม่กำหนดค่าเริ่มต้น ตัวแปรนั้นจะมีค่าเป็น `None` ซึ่งมีประโยชน์สำหรับการจองชื่อตัวแปรไว้ก่อน
--   **การกำหนดค่าใหม่ (Re-assignment):** เมื่อตัวแปรถูกประกาศแล้ว สามารถเปลี่ยนค่าได้โดยใช้ `=`
+-   **การประกาศ (Declaration)**
+    -   `LET var = value` ประกาศตัวแปรพร้อมกำหนดค่าเริ่มต้น
+    -   `LET var` ประกาศตัวแปรโดยไม่กำหนดค่าเริ่มต้น ตัวแปรนั้นจะมีค่าเป็น `None` ซึ่งมีประโยชน์สำหรับการจองชื่อตัวแปรไว้ก่อน
+-   **การกำหนดค่าใหม่ (Re-assignment)** เมื่อตัวแปรถูกประกาศแล้ว สามารถเปลี่ยนค่าได้โดยใช้ `=`
     ```momentum
     // ประกาศ
     let score = 0
@@ -119,45 +119,44 @@ python intp.py hello.mn
 
 ### ชนิดข้อมูล (Data Types)
 
--   **`INTEGER` & `FLOAT`**: ตัวเลขจำนวนเต็มและทศนิยม
+-   **`INTEGER` & `FLOAT`** ตัวเลขจำนวนเต็มและทศนิยม
     ```momentum
     let count = 10
     let pi = 3.14159
     ```
--   **`STRING`**: ข้อความที่อยู่ภายใน `"` หรือ `'` รองรับ Escape Characters เช่น `\n` (ขึ้นบรรทัดใหม่) และ `\t` (แท็บ)
-    -   **F-Strings:** วิธีที่ทรงพลังในการแทรกนิพจน์ลงในข้อความ
+-   **`STRING`** ข้อความที่อยู่ภายใน `"` หรือ `'` รองรับ Escape Characters เช่น `\n` (ขึ้นบรรทัดใหม่) และ `\t` (แท็บ)
+    -   **F-Strings** วิธีที่ทรงพลังในการแทรกนิพจน์ลงในข้อความ
     ```momentum
     let name = "Momentum"
     let version = 1.1
     print(f"Welcome to {name} v{version}. Two plus two is {2 + 2}.")
     ```
--   **`ARRAY` / `MATRIX`**: ชุดข้อมูลหลายมิติที่จัดเก็บตามลำดับ (0-based index) มีประสิทธิภาพสูงเพราะใช้ NumPy เป็นเบื้องหลัง
-    -   **การสร้าง:**
+-   **`ARRAY` / `MATRIX`** ชุดข้อมูลหลายมิติที่จัดเก็บตามลำดับ (0-based index) มีประสิทธิภาพสูงเพราะใช้ NumPy เป็นเบื้องหลัง
+    -   **การสร้าง**
         ```momentum
         dim empty_array(10)      // สร้าง Array 1 มิติ 10 ช่อง (ค่าเริ่มต้นเป็น 0)
         dim matrix = mat_zeros(3, 4) // สร้างเมทริกซ์ 3x4 ที่มีค่าเป็น 0 ทั้งหมด
         let literal_array = [10, 20, "thirty"] // สร้าง Array จากค่า Literal
-        ```
-    -   **การเข้าถึงและกำหนดค่า:**
+        ```    -   **การเข้าถึงและกำหนดค่า**
         ```momentum
         literal_array(0) = 15
         print(literal_array(2)) // "thirty"
         matrix(1, 2) = 99
         ```
--   **`DICTIONARY`**: ชุดข้อมูลแบบ Key-Value ที่ไม่มีลำดับ Key ต้องเป็น `STRING` เสมอ
+-   **`DICTIONARY`** ชุดข้อมูลแบบ Key-Value ที่ไม่มีลำดับ Key ต้องเป็น `STRING` เสมอ
     ```momentum
-    let config = {"host": "localhost", "port": 8080, "is_active": 1}
-    print(f"Connecting to {config["host"]}:{config["port"]}")
+    let config = {"host" "localhost", "port" 8080, "is_active" 1}
+    print(f"Connecting to {config["host"]}{config["port"]}")
     config["is_active"] = 0 // เปลี่ยนค่า
     ```
--   **`NONE`**: ชนิดข้อมูลพิเศษที่หมายถึง "ไม่มีค่า" เป็นค่าเริ่มต้นของตัวแปรที่ประกาศโดยไม่มีการกำหนดค่า
+-   **`NONE`** ชนิดข้อมูลพิเศษที่หมายถึง "ไม่มีค่า" เป็นค่าเริ่มต้นของตัวแปรที่ประกาศโดยไม่มีการกำหนดค่า
 
 ### ตัวดำเนินการ (Operators)
--   **Truthiness and Falsiness:** ในเงื่อนไข (`IF`, `WHILE`), ค่า `0` และ `None` ถือเป็นเท็จ (false) ส่วนค่าอื่นๆ ทั้งหมด (รวมถึง String ที่ไม่ว่างเปล่า) ถือเป็นจริง (true)
+-   **Truthiness and Falsiness** ในเงื่อนไข (`IF`, `WHILE`), ค่า `0` และ `None` ถือเป็นเท็จ (false) ส่วนค่าอื่นๆ ทั้งหมด (รวมถึง String ที่ไม่ว่างเปล่า) ถือเป็นจริง (true)
 
 #### ตารางตัวดำเนินการ (เรียงตามลำดับความสำคัญจากสูงไปต่ำ)
 | ลำดับ | ประเภท | ตัวดำเนินการ | ตัวอย่าง |
-|:---:|:---|:---|:---|
+|--- |--- |--- |--- |
 | 1 | Grouping & Access | `()`, `[]` | `(a + b) * c`, `my_array[0]` |
 | 2 | Unary | `NOT` | `NOT is_ready` |
 | 3 | Multiplicative | `*`, `/` | `price * quantity` |
@@ -173,9 +172,8 @@ python intp.py hello.mn
 
 ## 4. โครงสร้างควบคุม (Control Flow)
 
-### เงื่อนไข: `IF...THEN...ENDIF`
-**Syntax:**
-```momentum
+### เงื่อนไข `IF...THEN...ENDIF`
+**Syntax**```momentum
 IF condition THEN
     ...
 ELSE IF another_condition THEN
@@ -184,7 +182,7 @@ ELSE
     ...
 END IF
 ```
-**Example:**
+**Example**
 ```momentum
 let temperature = 32
 if temperature > 30 then
@@ -196,35 +194,35 @@ else
 end if
 ```
 
-### เลือกเงื่อนไข: `SWITCH...CASE...ENDSWITCH`
-**Syntax:**
+### เลือกเงื่อนไข `SWITCH...CASE...ENDSWITCH`
+**Syntax**
 ```momentum
 SWITCH expression
-    CASE value1, value2:
+    CASE value1, value2
         ...
-    CASE value3:
+    CASE value3
         ...
-    DEFAULT:
+    DEFAULT
         ...
 END SWITCH
 ```
-**Note:** `SWITCH` ใน Momentum ไม่มีการ "fall-through" เมื่อเจอ `CASE` ที่ตรงกันแล้ว จะทำงานในบล็อกนั้นและออกจาก `SWITCH` ทันที
+**Note** `SWITCH` ใน Momentum ไม่มีการ "fall-through" เมื่อเจอ `CASE` ที่ตรงกันแล้ว จะทำงานในบล็อกนั้นและออกจาก `SWITCH` ทันที
 ```momentum
 let http_status = 404
 switch http_status
-    case 200:
+    case 200
         print("OK")
-    case 403, 404:
-        print("Client Error: Not Found or Forbidden")
-    case 500:
+    case 403, 404
+        print("Client Error Not Found or Forbidden")
+    case 500
         print("Server Error")
-    default:
+    default
         print("Unknown status")
 end switch
 ```
 
-### การวนซ้ำ: `WHILE...WEND`
-**Syntax:** `WHILE condition ... WEND`
+### การวนซ้ำ `WHILE...WEND`
+**Syntax** `WHILE condition ... WEND`
 ```momentum
 let buffer = ""
 while len(buffer) < 10
@@ -233,18 +231,18 @@ while len(buffer) < 10
 wend
 ```
 
-### การวนซ้ำ: `FOR` Loops (`FOR...TO` and `FOR EACH`)
-1.  **`FOR...TO...STEP`**: สำหรับการวนซ้ำตามจำนวนรอบที่แน่นอน
+### การวนซ้ำ `FOR` Loops (`FOR...TO` and `FOR EACH`)
+1.  **`FOR...TO...STEP`** สำหรับการวนซ้ำตามจำนวนรอบที่แน่นอน
     ```momentum
     // พิมพ์เลขคู่จาก 10 ถึง 2
     for i = 10 to 2 step -2
         print(i)
     next i
     ```
-2.  **`FOR EACH...IN`**: สำหรับวนซ้ำสมาชิกทุกตัวใน Collection (เช่น Array)
+2.  **`FOR EACH...IN`** สำหรับวนซ้ำสมาชิกทุกตัวใน Collection (เช่น Array)
     ```momentum
     let file_list = os_list_dir(".")
-    print("Files in current directory:")
+    print("Files in current directory")
     for each filename in file_list
         if os_is_file(filename) then
             print(f"- {filename}")
@@ -252,9 +250,9 @@ wend
     next filename
     ```
 
-### การควบคุม Loop: `BREAK` และ `CONTINUE`
--   `BREAK`: ออกจาก Loop ทันที (ใช้ได้กับ `FOR` และ `WHILE`)
--   `CONTINUE`: ข้ามรอบปัจจุบันและไปเริ่มรอบถัดไปทันที
+### การควบคุม Loop `BREAK` และ `CONTINUE`
+-   `BREAK` ออกจาก Loop ทันที (ใช้ได้กับ `FOR` และ `WHILE`)
+-   `CONTINUE` ข้ามรอบปัจจุบันและไปเริ่มรอบถัดไปทันที
 
 ---
 
@@ -279,8 +277,8 @@ end if
 ```
 
 ### ขอบเขตของตัวแปร (Variable Scope)
--   **Global Scope:** ตัวแปรที่ประกาศนอกฟังก์ชันใดๆ สามารถเข้าถึงได้จากทุกที่
--   **Local Scope:** พารามิเตอร์และตัวแปรที่ประกาศด้วย `LET` ภายในฟังก์ชัน จะมีอยู่แค่ในฟังก์ชันนั้นๆ
+-   **Global Scope** ตัวแปรที่ประกาศนอกฟังก์ชันใดๆ สามารถเข้าถึงได้จากทุกที่
+-   **Local Scope** พารามิเตอร์และตัวแปรที่ประกาศด้วย `LET` ภายในฟังก์ชัน จะมีอยู่แค่ในฟังก์ชันนั้นๆ
 ```momentum
 let app_name = "My App" // Global
 
@@ -303,9 +301,9 @@ function get_config(filename)
         let content = file_read(filename)
         return json_parse(content)
     catch err
-        print(f"Could not load config '{filename}': {err}")
+        print(f"Could not load config '{filename}' {err}")
         // คืนค่า config เริ่มต้นถ้าไฟล์มีปัญหา
-        return {"default": 1} 
+        return {"default" 1} 
     end try
 end function
 ```
@@ -347,11 +345,11 @@ let raw_data = "   apple, BANANA, Cherry   "
 // แบบใช้ Pipe (อ่านจากซ้ายไปขวา)
 let processed = raw_data |> trim |> upper |> split(",")
 
-debug processed // [DEBUG] processed (ARRAY): ['APPLE' 'BANANA' 'CHERRY']
+debug processed // [DEBUG] processed (ARRAY) ['APPLE' 'BANANA' 'CHERRY']
 ```
 
 ### Asynchronous Programming
-**แนวคิด:** ใช้สำหรับงานที่ต้อง "รอ" (เช่น รอการตอบกลับจากเครือข่าย, รอการอ่านไฟล์ขนาดใหญ่) โดยไม่หยุดการทำงานของโปรแกรมส่วนอื่น
+**แนวคิด** ใช้สำหรับงานที่ต้อง "รอ" (เช่น รอการตอบกลับจากเครือข่าย, รอการอ่านไฟล์ขนาดใหญ่) โดยไม่หยุดการทำงานของโปรแกรมส่วนอื่น
 ```momentum
 async function fetch_data(url)
     print(f"Fetching from {url}...")
@@ -368,8 +366,8 @@ print("All fetching complete.")
 ```
 
 ### JIT Compilation
-**แนวคิด:** แปลงโค้ด Momentum เป็น Machine Code ประสิทธิภาพสูงขณะรัน (Just-In-Time) เหมาะสำหรับฟังก์ชันที่มีการคำนวณทางคณิตศาสตร์ใน Loop จำนวนมาก
--   **ข้อจำกัด:** `jit_function` รองรับเฉพาะการทำงานกับตัวเลขและฟังก์ชันคณิตศาสตร์พื้นฐาน ไม่สามารถเรียกใช้ฟังก์ชันจัดการ String หรือ I/O ได้
+**แนวคิด** แปลงโค้ด Momentum เป็น Machine Code ประสิทธิภาพสูงขณะรัน (Just-In-Time) เหมาะสำหรับฟังก์ชันที่มีการคำนวณทางคณิตศาสตร์ใน Loop จำนวนมาก
+-   **ข้อจำกัด** `jit_function` รองรับเฉพาะการทำงานกับตัวเลขและฟังก์ชันคณิตศาสตร์พื้นฐาน ไม่สามารถเรียกใช้ฟังก์ชันจัดการ String หรือ I/O ได้
 ```momentum
 jit_function mandelbrot_iterations(cx, cy, max_iter)
     let x = 0.0; let y = 0.0
@@ -387,23 +385,23 @@ end function
 ### การดีบักด้วย `DEBUG`
 เป็นเครื่องมือที่ง่ายและรวดเร็วสำหรับตรวจสอบค่าของนิพจน์ใดๆ ขณะที่โปรแกรมทำงาน
 ```momentum
-let config = {"user": "admin", "retries": 3}
+let config = {"user" "admin", "retries" 3}
 debug config["user"] == "admin"
 debug config["retries"] * 2
 ```
 
 ---
 
-## 9. ระบบข้อมูลในตัว: `DATA`, `READ`, `RESTORE`
+## 9. ระบบข้อมูลในตัว `DATA`, `READ`, `RESTORE`
 เป็นวิธีที่เรียบง่ายในการฝังชุดข้อมูลไว้ในซอร์สโค้ดโดยตรง เหมาะสำหรับสคริปต์ขนาดเล็กหรือโปรแกรมเพื่อการศึกษา
 ```momentum
 data "apple", 1.50, "banana", 0.75, "cherry", 3.00
 
-print("Fruit Prices:")
+print("Fruit Prices")
 for i = 1 to 3
     let fruit_name, price
     read fruit_name, price
-    print(f"- {fruit_name}: ${price}")
+    print(f"- {fruit_name} ${price}")
 next i
 ```
 
